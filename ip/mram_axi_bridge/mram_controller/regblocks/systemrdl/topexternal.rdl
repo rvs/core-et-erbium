@@ -1,0 +1,13 @@
+addrmap external_test_regs {
+    alignment = 8;
+    default regwidth = 64;
+    default accesswidth = 64;
+    name= "Erbium MRAM Block Test Register map.";
+    external MRAM_Controller_Test_Regs test_regs @0x0000;
+    // Anchor CPUIF width to 64
+    reg {
+        regwidth = 64;
+        accesswidth = 64;
+        field { sw = r; hw = na; } _dummy = 0;
+    } __cpuif_width_anchor__ @0xFFF0;
+};

@@ -1,0 +1,9 @@
+addrmap config       { 
+mem ni700_registers {
+desc="Refer to arm_corelink_ni_700_network_on_chip_trm_101566_0201_09_en-3.pdf for details";
+mementries=0x5800;
+memwidth=32;
+sw=rw; 
+};
+external ni700_registers ni700_registers @0;
+};

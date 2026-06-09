@@ -1,0 +1,810 @@
+property buffer_writes {
+    component = reg;
+    type = boolean;
+};
+property wbuffer_trigger {
+    component = reg;
+    type = ref;
+};
+
+regfile MRAM_Controller_Test_Regs {
+    name = "MRAM Control and Status Test Registers";
+    desc = "Register space that contains the test registers for test functionality and debug of the MRAM.";
+    alignment = 8;
+    default regwidth = 64;
+    default accesswidth = 64;
+    default sw = rw;
+    default hw = rw;
+    reg {
+        regwidth = 64;
+        field {
+            name = "powerup_trim_load_ovr_single_pulse<0>";
+            sw = rw;
+            hw = r;
+            singlepulse;
+        } powerup_trim_load_ovr_single_pulse_0[0:0] = 0x0;
+        field {
+            name = "powerup_trim_load_ovr_single_pulse<1>";
+            sw = rw;
+            hw = r;
+            singlepulse;
+        } powerup_trim_load_ovr_single_pulse_1[1:1] = 0x0;
+        field {
+            name = "powerup_trim_load_ovr_single_pulse<2>";
+            sw = rw;
+            hw = r;
+            singlepulse;
+        } powerup_trim_load_ovr_single_pulse_2[2:2] = 0x0;
+        field {
+            name = "powerup_trim_load_ovr_single_pulse<3>";
+            sw = rw;
+            hw = r;
+            singlepulse;
+        } powerup_trim_load_ovr_single_pulse_3[3:3] = 0x0;
+        field {
+            name = "mram_clk_single_pulse";
+            sw = rw;
+            hw = r;
+            singlepulse;
+        } mram_clk_single_pulse[4:4] = 0x0;
+    } mram_control_pulse @ 0x20;
+    reg {
+        regwidth = 256;
+        accesswidth = 64;
+        buffer_writes = true;
+        field {
+            name = "addr_in";
+            sw = rw;
+            hw = r;
+        } addr_in[16:0] = 0x00000;
+        field {
+            name = "ce";
+            sw = rw;
+            hw = r;
+        } ce[24:17] = 0x00;
+        field {
+            name = "we";
+            sw = rw;
+            hw = r;
+        } we[25:25] = 0x0;
+        field {
+            name = "rd_pulse_meas_en";
+            sw = rw;
+            hw = r;
+        } rd_pulse_meas_en[26:26] = 0x0;
+        field {
+            name = "rca_ovr";
+            sw = rw;
+            hw = r;
+        } rca_ovr[33:27] = 0x00;
+        field {
+            name = "rca_ovr_en";
+            sw = rw;
+            hw = r;
+        } rca_ovr_en[34:34] = 0x0;
+        field {
+            name = "gbl_cfg_ovr_en";
+            sw = rw;
+            hw = r;
+        } gbl_cfg_ovr_en[35:35] = 0x0;
+        field {
+            name = "rd_en_ovr";
+            sw = rw;
+            hw = r;
+        } rd_en_ovr[36:36] = 0x0;
+        field {
+            name = "ref_prg_en";
+            sw = rw;
+            hw = r;
+        } ref_prg_en[37:37] = 0x0;
+        field {
+            name = "dsleep_mram_en";
+            sw = rw;
+            hw = r;
+        } dsleep_mram_en[38:38] = 0x0;
+        field {
+            name = "reg_logic_sup_sleep_ovr";
+            sw = rw;
+            hw = r;
+        } reg_logic_sup_sleep_ovr[39:39] = 0x1;
+        field {
+            name = "prg_rd1_byp";
+            sw = rw;
+            hw = r;
+        } prg_rd1_byp[40:40] = 0x0;
+        field {
+            name = "wr_en_ovr";
+            sw = rw;
+            hw = r;
+        } wr_en_ovr[41:41] = 0x0;
+        field {
+            name = "dma_en";
+            sw = rw;
+            hw = r;
+        } dma_en[42:42] = 0x0;
+        field {
+            name = "vblslx_gain_mode_ovr";
+            sw = rw;
+            hw = r;
+        } vblslx_gain_mode_ovr[43:43] = 0x0;
+        field {
+            name = "powerup_trim_load_ovr";
+            sw = rw;
+            hw = r;
+        } powerup_trim_load_ovr[47:44] = 0x0;
+        field {
+            name = "test_cal_en";
+            sw = rw;
+            hw = r;
+        } test_cal_en[52:52] = 0x0;
+        field {
+            name = "anatest0_sel";
+            sw = rw;
+            hw = r;
+        } anatest0_sel[55:53] = 0x0;
+        field {
+            name = "anatest1_sel";
+            sw = rw;
+            hw = r;
+        } anatest1_sel[58:56] = 0x0;
+        field {
+            name = "eccrom_deep_sleep";
+            sw = rw;
+            hw = r;
+        } eccrom_deep_sleep[59:59] = 0x1;
+        field {
+            name = "ref_ecc_sel";
+            sw = rw;
+            hw = r;
+        } ref_ecc_sel[60:60] = 0x0;
+        field {
+            name = "disable_cpu_intr";
+            sw = rw;
+            hw = r;
+        } disable_cpu_intr[61:61] = 0x0;
+        field {
+            name = "disable_ted";
+            sw = rw;
+            hw = r;
+        } disable_ted[62:62] = 0x0;
+        field {
+            name = "ecc_bypass_en";
+            sw = rw;
+            hw = r;
+        } ecc_bypass_en[63:63] = 0x0;
+        field {
+            name = "bwe";
+            sw = rw;
+            hw = r;
+        } bwe[142:64] = 0x00000000000000000000;
+        field {
+            name = "mram_clk_en";
+            sw = rw;
+            hw = r;
+        } mram_clk_en[143:143] = 0x1;
+        field {
+            name = "din";
+            sw = rw;
+            hw = r;
+        } din[222:144] = 0x00000000000000000000;
+        field {
+            name = "test_reg_ovr_en";
+            sw = rw;
+            hw = r;
+        } test_reg_ovr_en[223:223] = 0x0;
+        field {
+            name = "otp_wr_en";
+            sw = rw;
+            hw = r;
+        } otp_wr_en[224:224] = 0x0;
+        field {
+            name = "rst_cpu_intr";
+            sw = rw;
+            hw = r;
+        } rst_cpu_intr[225:225] = 0x0;
+        field {
+            name = "dout_en";
+            sw = rw;
+            hw = r;
+        } dout_en[233:226] = 0x00;
+        field {
+            name = "ecc_en";
+            sw = rw;
+            hw = r;
+        } ecc_en[236:234] = 0x0;
+        field {
+            name = "even_man_stripe_sel";
+            sw = rw;
+            hw = r;
+        } even_man_stripe_sel[240:237] = 0x0;
+        field {
+            name = "even_man_wr<0>";
+            sw = rw;
+            hw = r;
+        } even_man_wr_0[241:241] = 0x0;
+        field {
+            name = "even_man_wr<1>";
+            sw = rw;
+            hw = r;
+        } even_man_wr_1[242:242] = 0x0;
+        field {
+            name = "even_man_wr<2>";
+            sw = rw;
+            hw = r;
+        } even_man_wr_2[243:243] = 0x0;
+        field {
+            name = "even_man_wr<3>";
+            sw = rw;
+            hw = r;
+        } even_man_wr_3[244:244] = 0x0;
+        field {
+            name = "odd_man_stripe_sel";
+            sw = rw;
+            hw = r;
+        } odd_man_stripe_sel[248:245] = 0x0;
+        field {
+            name = "odd_man_wr<0>";
+            sw = rw;
+            hw = r;
+        } odd_man_wr_0[249:249] = 0x0;
+        field {
+            name = "odd_man_wr<1>";
+            sw = rw;
+            hw = r;
+        } odd_man_wr_1[250:250] = 0x0;
+        field {
+            name = "odd_man_wr<2>";
+            sw = rw;
+            hw = r;
+        } odd_man_wr_2[251:251] = 0x0;
+        field {
+            name = "odd_man_wr<3>";
+            sw = rw;
+            hw = r;
+        } odd_man_wr_3[252:252] = 0x0;
+        field {
+            name = "sah_en";
+            sw = rw;
+            hw = r;
+        } sah_en[253:253] = 0x1;
+        field {
+            name = "scc_otp_en";
+            sw = rw;
+            hw = r;
+        } scc_otp_en[254:254] = 0x0;
+        field {
+            name = "maintenance_mode";
+            sw = rw;
+            hw = r;
+        } maintenance_mode[255:255] = 0x0;
+    } mram_control @ 0x00;
+    reg {
+        regwidth = 64;
+        field {
+            name = "sa_equal_trim<1:0>";
+            sw = rw;
+            hw = r;
+        } sa_equal_trim[1:0] = 0x1;
+        field {
+            name = "vblslx_boost_trim<2:0>";
+            sw = rw;
+            hw = r;
+        } vblslx_boost_trim[4:2] = 0x4;
+        field {
+            name = "wr_en_msb_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } wr_en_msb_trim[8:5] = 0x9;
+        field {
+            name = "wr_en_lsb_trim<2:0>";
+            sw = rw;
+            hw = r;
+        } wr_en_lsb_trim[11:9] = 0x6;
+        field {
+            name = "vblslx_gain_mode";
+            sw = rw;
+            hw = r;
+        } vblslx_gain_mode[12:12] = 0x0;
+        field {
+            name = "repulse_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } repulse_trim[16:13] = 0x6;
+        field {
+            name = "repulse_en";
+            sw = rw;
+            hw = r;
+        } repulse_en[17:17] = 0x1;
+        field {
+            name = "rd_en_trim<2:0>";
+            sw = rw;
+            hw = r;
+        } rd_en_trim[20:18] = 0x5;
+        field {
+            name = "osc_wr_div_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } osc_wr_div_trim[25:22] = 0x3;
+        field {
+            name = "vblsl_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } vblsl_trim[29:26] = 0x4;
+        field {
+            name = "tcsel_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } tcsel_trim[33:30] = 0x3;
+        field {
+            name = "vwlwr_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } vwlwr_trim[37:34] = 0x7;
+        field {
+            name = "vcr_gate_trim<3:0>";
+            sw = rw;
+            hw = r;
+        } vcr_gate_trim[41:38] = 0xE;
+    } gbl_cfg_ovr_0 @ 0x28;
+    reg {
+        regwidth = 64;
+        field {
+            name = "sa_equal_trim<1:0>";
+            sw = r;
+            hw = w;
+        } sa_equal_trim[1:0];
+        field {
+            name = "vblslx_boost_trim<2:0>";
+            sw = r;
+            hw = w;
+        } vblslx_boost_trim[4:2];
+        field {
+            name = "wr_en_msb_trim<3:0>";
+            sw = r;
+            hw = w;
+        } wr_en_msb_trim[8:5];
+        field {
+            name = "wr_en_lsb_trim<2:0>";
+            sw = r;
+            hw = w;
+        } wr_en_lsb_trim[11:9];
+        field {
+            name = "vblslx_gain_mode";
+            sw = r;
+            hw = w;
+        } vblslx_gain_mode[12:12];
+        field {
+            name = "repulse_trim<3:0>";
+            sw = r;
+            hw = w;
+        } repulse_trim[16:13];
+        field {
+            name = "repulse_en";
+            sw = r;
+            hw = w;
+        } repulse_en[17:17];
+        field {
+            name = "rd_en_trim<2:0>";
+            sw = r;
+            hw = w;
+        } rd_en_trim[20:18];
+        field {
+            name = "osc_wr_div_trim<3:0>";
+            sw = r;
+            hw = w;
+        } osc_wr_div_trim[25:22];
+        field {
+            name = "vblsl_trim<3:0>";
+            sw = r;
+            hw = w;
+        } vblsl_trim[29:26];
+        field {
+            name = "tcsel_trim<3:0>";
+            sw = r;
+            hw = w;
+        } tcsel_trim[33:30];
+        field {
+            name = "vwlwr_trim<3:0>";
+            sw = r;
+            hw = w;
+        } vwlwr_trim[37:34];
+        field {
+            name = "vcr_gate_trim<3:0>";
+            sw = r;
+            hw = w;
+        } vcr_gate_trim[41:38];
+    } gbl_cfg_0 @ 0x30;
+    reg {
+        regwidth = 64;
+        field {
+            name = "blk0_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk0_man_ccnt[3:0];
+        field {
+            name = "blk0_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk0_man_cnfg[7:4] = 0x0;
+        field {
+            name = "blk0_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk0_man_fcnt[9:8];
+        field {
+            name = "blk1_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk1_man_ccnt[19:16];
+        field {
+            name = "blk1_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk1_man_cnfg[23:20] = 0x0;
+        field {
+            name = "blk1_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk1_man_fcnt[25:24];
+        field {
+            name = "blk2_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk2_man_ccnt[35:32];
+        field {
+            name = "blk2_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk2_man_cnfg[39:36] = 0x0;
+        field {
+            name = "blk2_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk2_man_fcnt[41:40];
+        field {
+            name = "blk3_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk3_man_ccnt[51:48];
+        field {
+            name = "blk3_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk3_man_cnfg[55:52] = 0x0;
+        field {
+            name = "blk3_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk3_man_fcnt[57:56];
+    } man_control_0 @ 0x38;
+    man_control_0.blk0_man_cnfg->wel = mram_control.even_man_wr_0;
+    man_control_0.blk1_man_cnfg->wel = mram_control.even_man_wr_1;
+    man_control_0.blk2_man_cnfg->wel = mram_control.even_man_wr_2;
+    man_control_0.blk3_man_cnfg->wel = mram_control.even_man_wr_3;
+    reg {
+        regwidth = 64;
+        field {
+            name = "blk4_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk4_man_ccnt[3:0];
+        field {
+            name = "blk4_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk4_man_cnfg[7:4] = 0x0;
+        field {
+            name = "blk4_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk4_man_fcnt[9:8];
+        field {
+            name = "blk5_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk5_man_ccnt[19:16];
+        field {
+            name = "blk5_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk5_man_cnfg[23:20] = 0x0;
+        field {
+            name = "blk5_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk5_man_fcnt[25:24];
+        field {
+            name = "blk6_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk6_man_ccnt[35:32];
+        field {
+            name = "blk6_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk6_man_cnfg[39:36] = 0x0;
+        field {
+            name = "blk6_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk6_man_fcnt[41:40];
+        field {
+            name = "blk7_man_ccnt<3:0>";
+            sw = r;
+            hw = w;
+        } blk7_man_ccnt[51:48];
+        field {
+            name = "blk7_man_cnfg<3:0>";
+            sw = rw;
+            hw = rw;
+            wel;
+        } blk7_man_cnfg[55:52] = 0x0;
+        field {
+            name = "blk7_man_fcnt<1:0>";
+            sw = r;
+            hw = w;
+        } blk7_man_fcnt[57:56];
+    } man_control_1 @ 0x40;
+    man_control_1.blk4_man_cnfg->wel = mram_control.odd_man_wr_0;
+    man_control_1.blk5_man_cnfg->wel = mram_control.odd_man_wr_1;
+    man_control_1.blk6_man_cnfg->wel = mram_control.odd_man_wr_2;
+    man_control_1.blk7_man_cnfg->wel = mram_control.odd_man_wr_3;
+    mram_control->wbuffer_trigger = mram_control_pulse;
+    reg {
+        regwidth = 64;
+        field {
+            name = "bist_error_loop<15:0>";
+            sw = r;
+            hw = w;
+        } bist_error_loop[15:0];
+        field {
+            name = "bist_error_count<16:0>";
+            sw = r;
+            hw = w;
+        } bist_error_count[33:17];
+        field {
+            name = "bist_rh0<6:0>";
+            sw = r;
+            hw = w;
+        } bist_rh0[40:34];
+        field {
+            name = "bist_rh1<6:0>";
+            sw = r;
+            hw = w;
+        } bist_rh1[47:41];
+        field {
+            name = "bist_rh2<6:0>";
+            sw = r;
+            hw = w;
+        } bist_rh2[54:48];
+        field {
+            name = "cpu_intr_flag";
+            sw = r;
+            hw = w;
+        } cpu_intr_flag[56:55];
+        field {
+            name = "ecc_1bit_flag<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_1bit_flag[58:57];
+        field {
+            name = "ecc_2bit_flag<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_2bit_flag[60:59];
+        field {
+            name = "ecc_3bit_flag<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_3bit_flag[62:61];
+    } mram_status_0 @ 0x48;
+    reg {
+        regwidth = 64;
+        field {
+            name = "temp<1:0>";
+            sw = r;
+            hw = w;
+        } temp[1:0];
+        field {
+            name = "pwr_ok";
+            sw = r;
+            hw = w;
+        } pwr_ok[9:9];
+        field {
+            name = "eccrom_pwr_ok";
+            sw = r;
+            hw = w;
+        } eccrom_pwr_ok[10:10];
+        field {
+            name = "intr_error_lane0_addr<18:0>";
+            sw = r;
+            hw = w;
+        } intr_error_lane0_addr[29:11];
+        field {
+            name = "intr_error_lane1_addr<18:0>";
+            sw = r;
+            hw = w;
+        } intr_error_lane1_addr[48:30];
+        field {
+            name = "busy<7:0>";
+            sw = r;
+            hw = w;
+        } busy[57:50];
+        field {
+            name = "ecc_1bit<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_1bit[4:3];
+        field {
+            name = "ecc_2bit<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_2bit[6:5];
+        field {
+            name = "ecc_3bit<1:0>";
+            sw = r;
+            hw = w;
+        } ecc_3bit[8:7];
+    } mram_status_1 @ 0x50;
+    reg {
+        regwidth = 64;
+        field {
+            name = "bist_err_add<19:0>";
+            sw = r;
+            hw = w;
+        } bist_err_add[19:0];
+        field {
+            name = "bist_error";
+            sw = r;
+            hw = w;
+        } bist_error[20:20];
+        field {
+            name = "bist_busy";
+            sw = r;
+            hw = w;
+        } bist_busy[21:21];
+    } bist_status_1 @ 0x98;
+    reg {
+        regwidth = 64;
+        field {
+            name = "dout<63:0>";
+            sw = r;
+            hw = w;
+        } dout[63:0];
+    } mram_dout_even_lower @ 0x58;
+    reg {
+        regwidth = 64;
+        field {
+            name = "dout<142:79>";
+            sw = r;
+            hw = w;
+        } dout[63:0];
+    } mram_dout_odd_lower @ 0x60;
+    reg {
+        regwidth = 64;
+        field {
+            name = "dout<78:64>";
+            sw = r;
+            hw = w;
+        } dout_even_msb[14:0];
+        field {
+            name = "dout<157:143>";
+            sw = r;
+            hw = w;
+        } dout_odd_msb[46:32];
+    } mram_dout_uppers @ 0x68;
+    reg {
+        regwidth = 64;
+        field {
+            name = "bist_error_value<63:0>";
+            sw = r;
+            hw = w;
+        } bist_error_value[63:0];
+    } bist_status_0 @ 0x70;
+    reg {
+        regwidth = 128; accesswidth = 64;
+        field {
+            name = "bist_rte_en";
+            sw = rw;
+            hw = r;
+        } bist_rte_en[0:0] = 0x0;
+        field {
+            name = "bist_data_inv";
+            sw = rw;
+            hw = r;
+        } bist_data_inv[1:1] = 0x0;
+        field {
+            name = "bist_add_inc<2:0>";
+            sw = rw;
+            hw = r;
+        } bist_add_inc[4:2] = 0x0;
+        field {
+            name = "bist_stop_on_error";
+            sw = rw;
+            hw = r;
+        } bist_stop_on_error[5:5] = 0x0;
+        field {
+            name = "bist_start_add<19:0>";
+            sw = rw;
+            hw = r;
+        } bist_start_add[25:6] = 0x00000;
+        field {
+            name = "bist_stop_add<19:0>";
+            sw = rw;
+            hw = r;
+        } bist_stop_add[45:26] = 0x00000;
+        field {
+            name = "RH4margin<4:0>";
+            sw = rw;
+            hw = r;
+        } RH4margin[50:46] = 0x0A;
+        field {
+            name = "rh2_offset<4:0>";
+            sw = rw;
+            hw = r;
+        } rh2_offset[55:51] = 0x00;
+        field {
+            name = "bist_error_value<78:64>";
+            sw = r;
+            hw = w;
+        } bist_error_value[78:64];
+        field {
+            name = "bist_loop_count<15:0>";
+            sw = rw;
+            hw = r;
+        } bist_loop_count[94:79] = 0x0000;
+        field {
+            name = "bist_start";
+            sw = rw;
+            hw = r;
+        } bist_start[95:95] = 0x0;
+        field {
+            name = "bist_trim_mode";
+            sw = rw;
+            hw = r;
+        } bist_trim_mode[96:96] = 0x0;
+        field {
+            name = "bist_stop_on_repl_of";
+            sw = rw;
+            hw = r;
+        } bist_stop_on_repl_of[97:97] = 0x0;
+        field {
+            name = "bist_rst_b";
+            sw = rw;
+            hw = r;
+        } bist_rst_b[98:98] = 0x1;
+        field {
+            name = "bist_reset";
+            sw = rw;
+            hw = r;
+        } bist_reset[99:99] = 0x0;
+        field {
+            name = "bist_rd_en";
+            sw = rw;
+            hw = r;
+        } bist_rd_en[100:100] = 0x0;
+        field {
+            name = "bist_wr_en";
+            sw = rw;
+            hw = r;
+        } bist_wr_en[101:101] = 0x0;
+    } bist_control @ 0x78;
+    reg {
+        // regwidth = 64;
+        regwidth = 128; accesswidth = 64;
+        field {
+            name = "dout<127:0>";
+            sw = r;
+            hw = w;
+        } dout[127:0];
+    } ecc_correction @ 0x88;
+
+
+};

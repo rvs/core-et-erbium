@@ -1,0 +1,21 @@
+[project]
+name = "uart"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "cocotb>=2.0.0",
+    "cocotbext-uart>=0.1.4",
+    "cocotbext-axi>=0.1.26",
+    "peakrdl-html>=2.11.0",
+    "cocotbext-dyulib>=0.0.4",
+    "peakrdl>=1.5.0",
+    "peakrdl-bsv>=0.0.3",
+    "peakrdl-markdown>=1.0.3",
+    "peakrdl-python>=2.3.0",
+    "peakrdl-cocotb-ralgen>=0.1.7.post9",
+]
+[tool.uv.sources]
+cocotbext-uart = { git = "https://github.com/vyomasystems/cocotbext-uart.git", rev = "parity_update" }
+copra = { git = "https://github.com/cocotb/copra.git" }

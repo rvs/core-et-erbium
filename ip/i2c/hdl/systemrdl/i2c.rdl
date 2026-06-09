@@ -1,0 +1,37 @@
+
+addrmap I2C_Reg      {
+default regwidth = 32;
+alignment=8;
+	reg {
+		name="Command Registers"; desc="I2C Command Registers";
+		field {sw=rw; hw=r; desc="Start";} start[0:0]=0x0;
+		field { sw=rw; hw=r; desc="TODO";} read[1:1]=0x0;
+		field { sw=rw; hw=r; desc="TODO";} write[2:2]=0x0;
+		field { sw=rw; hw=r; desc="TODO";} write_multiple[3:3]=0x0;
+		field { sw=rw; hw=r; desc="TODO";} stop[4:4]=0x0;
+		field { sw=rw;singlepulse; hw=r; desc="TODO";} enq[5:5]=0x0;
+		field {sw=rw; hw=r; desc="Address";} address[14:8]=0x0;
+	} Commands;
+	reg {
+		field {sw=r; hw=w; desc="Transaction ongoing";} busy[0:0]=0x0;
+		field {sw=r; hw=w; desc="Transaction ongoing";} bus_control[1:1]=0x0;
+		field {sw=r; hw=w; desc="Transaction ongoing";} bus_active[2:2]=0x0;
+		field {sw=r;rclr; hw=na;hwset; desc="Transaction ongoing";} missed_ack[3:3]=0x0;
+    field {sw=r; hw=w; desc= "cmd_ff not Full";} cmd_ff_n_full[4:4];
+    field {sw=r; hw=w; desc= "tx_ff not Full";} tx_ff_n_full[5:5];
+    field {sw=r; hw=w; desc= "rx_ff not Full";} rx_ff_n_full[6:6];
+    field {sw=r; hw=w; desc= "rx overflow";} rx_overflow[7:7];
+	} Status ;
+	reg {
+		field {sw=rw; hw=r; desc="Prescale";} prescale[15:0]=0x0;
+		field {sw=rw; hw=r; desc="Stop on Idle";} stop_on_idle[16:16]=0x0;
+	} Cfg;
+	reg {
+		field {sw=w; hw=r; swmod; desc="TxData";} wdata[7:0]=0x0;
+		field {sw=w; hw=r; desc="Write Last";} wlast[8:8]=0x0;
+	} Wdata ;
+	reg {
+		field {sw=r; hw=w;swacc; desc="RxData";} rdata[7:0]=0x0;
+		field {sw=r; hw=w; desc="Read Last";} rlast[8:8]=0x0;
+	} Rdata ;
+};

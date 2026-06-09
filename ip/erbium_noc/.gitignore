@@ -1,0 +1,10 @@
+# build artifacts
+obj_dir/
+*.o
+*.d
+sim_ni700
+*.vcd
+*.fst
+# python
+__pycache__/
+*.pyc

@@ -1,0 +1,59 @@
+# Design-verification flow on the self-hosted VCS runner.
+#
+# This runs on our own runner pool (unique label `hdl-et-vcs`), which has a VCS
+# install, a license, and a checkout of the private hdl-et-ci repo at $HDL_ET_CI.
+# The label must be unique — `self-hosted` alone is auto-applied to every
+# self-hosted runner, so any stray workflow could otherwise grab this licensed
+# host. The job just checks out hdl-et and hands the workspace to hdl-et-ci's
+# dv.sh, which runs the flow in a bwrap sandbox — the same entry point used
+# interactively, so CI and local behave identically. Register more machines with
+# the same label to scale the pool (real ceiling = VCS license seats).
+#
+# Restrict who can change CI: a CODEOWNERS rule on .github/** plus required
+# review keeps workflow edits gated, since a self-hosted runner on a public repo
+# can otherwise be driven by untrusted contributors (it can reach the license
+# server). Keep triggers to push on internal branches + manual dispatch — not
+# pull_request from forks.
+name: dv
+
+on:
+  push:
+    branches: [dev, dev-flat]
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Makefile.elf target to run"
+        default: l1_only
+
+concurrency:
+  group: dv-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dv:
+    runs-on: [self-hosted, hdl-et-vcs]
+    timeout-minutes: 90
+    env:
+      TEST: ${{ github.event.inputs.test || 'l1_only' }}
+    steps:
+      - name: Checkout (recursive submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run DV (${{ github.event.inputs.test || 'l1_only' }})
+        run: |
+          : "${HDL_ET_CI:?HDL_ET_CI must point at the hdl-et-ci checkout on the runner host}"
+          ET_HDL_REPO="$GITHUB_WORKSPACE" ET_HDL_NO_CLONE=1 \
+            "$HDL_ET_CI/dv.sh" make -C tb -f Makefile.elf "$TEST" STDOUT=1
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dv-${{ env.TEST }}-${{ github.run_id }}
+          path: |
+            tb/elf_run_*/test/**/*_results.xml
+            tb/elf_run_*/test/**/run.log
+            tb/elf_run_*/build/run.log
+          if-no-files-found: warn

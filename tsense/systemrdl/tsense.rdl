@@ -1,0 +1,83 @@
+// tsense.rdl
+//
+// Register definitions for the tsense_wrap module.
+//
+// Usage in a top-level addrmap:
+//
+//   `include "tsense.rdl"
+//
+//   addrmap my_map {
+//       ...
+//       tsense_ctrl   tsense_ctrl   @ <offset>;
+//       tsense_status tsense_status @ <offset+4>;
+//       ...
+//   };
+//
+// HW connections to tsense_wrap:
+//
+//   tsense_wrap u_tsense (
+//       .conv    (tsense_ctrl.conv->value),
+//       .sen_sel (tsense_ctrl.sen_sel->value),
+//       .clk_div (tsense_ctrl.clk_div->value),
+//       .data    (tsense_status.data->next),
+//       .valid   (tsense_status.valid->next),
+//       .conv_b  (tsense_status.conv_b->next),
+//       ...
+//   );
+
+reg tsense_ctrl {
+    name = "Temperature Sensor Control";
+    desc = "Controls the temperature sensor and ADC conversion.
+            Write 1 to conv to trigger a single conversion. The bit
+            auto-clears after one cycle. Select which sensor to sample
+            with sen_sel, and set the ADC clock divider with clk_div.";
+
+    default sw = rw;
+    default hw = r;
+
+    field {
+        desc = "Start conversion. Writing 1 triggers a single ADC sample.
+                Auto-clears to 0 after one cycle. Clears the valid bit
+                in tsense_status when written.";
+        singlepulse;
+    } conv[0:0] = 0;
+
+    field {
+        desc = "Sensor enable. When set, the sensor selected by sel is
+                powered on. When clear, all sensors are off.";
+    } sen_en[1:1] = 0;
+
+    field {
+        desc = "Sensor select. Selects which of the 4 temperature sensors
+                (0-3) is connected to the ADC.";
+    } sen_sel[3:2] = 0;
+
+    field {
+        desc = "ADC clock divider. The ADC clock frequency is
+                sys_clk / (2 * (clk_div + 1)).
+                0x00 = sys_clk/2 (fastest).
+                0xFF = sys_clk/512 (slowest).";
+    } clk_div[11:4] = 8'h01;
+};
+
+reg tsense_status {
+    name = "Temperature Sensor Status";
+    desc = "Read-only status from the most recent ADC conversion.";
+
+    default sw = r;
+    default hw = w;
+
+    field {
+        desc = "ADC output data from the last completed conversion.";
+    } data[3:0] = 0;
+
+    field {
+        desc = "Data valid. Set by hardware when a conversion completes.
+                Cleared when a new conversion is started (conv written).";
+    } valid[4:4] = 0;
+
+    field {
+        desc = "ADC conversion status. Active-low while the ADC conversion is
+                in progress and high when idle / conversion complete.";
+    } conv_b[5:5] = 1;
+};

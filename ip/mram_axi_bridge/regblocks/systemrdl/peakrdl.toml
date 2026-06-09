@@ -1,0 +1,2 @@
+[regblock]
+default_reset = "arst_n"

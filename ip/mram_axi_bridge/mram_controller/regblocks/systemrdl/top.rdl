@@ -1,0 +1,4 @@
+addrmap controller_regs {
+    name= "Erbium MRAM Block Test Register map.";
+    MRAM_Controller_Test_Regs test_regs @0x0000;
+};

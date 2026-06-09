@@ -1,0 +1,117 @@
+<mxfile host="Electron" modified="2023-04-26T16:31:47.878Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.1 Chrome/112.0.5615.87 Electron/24.1.2 Safari/537.36" etag="4TExm198hmPMLAI0vhHA" version="21.2.1" type="device">
+  <diagram name="Page-1" id="td_g9gTrz1di5OTNTd1u">
+    <mxGraphModel dx="1072" dy="708" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xSapC88BeMzrCBatVArY-33" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="287.5" y="265" width="92.5" height="205" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.146;entryY=1.045;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-2" target="xSapC88BeMzrCBatVArY-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-2" value="AIB-like Chiplet Interface" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="180" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-3" value="AHB-Lite" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="303.75" y="270" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-4" value="AXI Master" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="303.75" y="360" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.004;entryY=0.198;entryDx=0;entryDy=0;startArrow=classic;startFill=1;entryPerimeter=0;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-5" target="xSapC88BeMzrCBatVArY-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-32" value="Mux Select" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;endArrow=none;endFill=0;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="440" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-5" value="MUX" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;rotation=90;" vertex="1" parent="1">
+          <mxGeometry x="312.5" y="280" width="255" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-6" value="AXI" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="510" y="210" width="100" height="510" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-12" value="Master Port" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="520" y="295" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-14" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="740" as="sourcePoint" />
+            <mxPoint x="280" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-15" value="Chiplet Boundary" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="252.5" y="100" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-16" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="220" as="sourcePoint" />
+            <mxPoint x="300" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-18" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="237.5" y="360" as="sourcePoint" />
+            <mxPoint x="287.5" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-19" value="GDSP" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="550" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-20" value="JTAG" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="640" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-21" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="679.76" as="sourcePoint" />
+            <mxPoint x="300" y="679.76" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-22" value="IO Port: 50umx25um" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="540" width="97.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-23" value="IO Port: 20umx15um" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="170" width="97.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-24" value="No IO Ports, Direct Connect Out" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="180" y="300" width="97.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-26" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="250" y="589.76" as="sourcePoint" />
+            <mxPoint x="300" y="589.76" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-27" value="IO Port: 50umx25um" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="190" y="630" width="97.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-29" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.003;entryY=0.746;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-19" target="xSapC88BeMzrCBatVArY-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="540" as="sourcePoint" />
+            <mxPoint x="510" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-30" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.004;entryY=0.922;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-20" target="xSapC88BeMzrCBatVArY-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="520" y="630" as="sourcePoint" />
+            <mxPoint x="570" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-35" value="Metal 11/10 Layer Mux" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="283.75" y="440" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xSapC88BeMzrCBatVArY-36" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1.029;exitY=0.447;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.683;entryY=1.017;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="xSapC88BeMzrCBatVArY-33" target="xSapC88BeMzrCBatVArY-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="320" as="sourcePoint" />
+            <mxPoint x="460" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

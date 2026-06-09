@@ -1,0 +1,27 @@
+`include "system.rdl"
+`include "../../ip/cpu_subsystem/rtl/shire/esr/scripts/systemRDL/esr.rdl"
+`include "../../ip/mram_axi_bridge/regblocks/systemrdl/top.rdl"
+`include "../../ip/xspi/systemrdl/sccr.rdl"
+`include "romram.rdl"
+`include "mram.rdl"
+`include "periph.rdl"
+`include "../../ip/i2c/hdl/systemrdl/i2c.rdl"
+`include "qspi.rdl"
+`include "uart.rdl"
+
+addrmap ErbiumCPU_MemoryMap {
+	name="Erbium CPU Memory Map";
+	System_Reg system_registers @0x2000000;
+        `ifndef PEAKRDL_CHEADER
+	axi2mram_bridge_registers mram_registers @0x2001000;
+        `endif
+	I2C_Reg i2c_registers @0x2002000;
+	QSPI_Reg qspi_registers @0x2003000;
+	UART_Reg uart_registers @0x2004000;
+	memories ROMRAM @0x2008000;
+	SCCR_Reg xspi_registers @0x200f000;
+	config nic_config @0xfe000000;
+	external mram mram @0x40000000;
+	Erbium_ESR cpu_registers @0x80000000;
+        PLIC_cpu plic @0xA0000000;
+};

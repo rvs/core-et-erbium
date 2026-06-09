@@ -1,0 +1,228 @@
+regfile Axi2Mram_Regs {
+    name = "AXI-to-MRAM Bridge Control and Status Registers";
+    desc = "Register space for configuration and status of the AXI-to-MRAM bridge.";
+    alignment = 8;
+    default regwidth = 64;
+    default sw = rw;
+    default hw = r;
+
+    // ----------------------------------------------------------------
+    // 0x00: Arbiter Mode
+    // ----------------------------------------------------------------
+    reg {
+        name = "Arbiter Mode";
+        desc = "Controls the read/write arbitration policy when both channels
+                have simultaneous pending requests.";
+        regwidth = 64;
+        field {
+            name = "arbiter_mode";
+            desc = "Arbitration mode selection.
+                    0 = Write Priority  (writes always win)
+                    1 = Read Priority   (reads always win)
+                    2 = Round Robin     (alternate after each conflict)
+                    3 = Oldest First    (whichever request arrived first wins)";
+            sw = rw;
+            hw = r;
+        } arbiter_mode[1:0] = 2; // Default: Round Robin
+    } arbiter_mode_reg @0x00;
+
+    // ----------------------------------------------------------------
+    // 0x08: Bridge Status (read-only)
+    // ----------------------------------------------------------------
+    reg {
+        name = "Bridge Status";
+        desc = "Read-only status indicators for the AXI-to-MRAM bridge.";
+        regwidth = 64;
+        field {
+            name = "axi_busy";
+            desc = "High when the bridge has outstanding AXI transactions.";
+            sw = r;
+            hw = w;
+        } axi_busy[0:0] = 0;
+        field {
+            name = "cmd_queue_active";
+            desc = "Per-bank command queue active flags. Bit N = bank N has
+                    pending write/RMW commands.";
+            sw = r;
+            hw = w;
+        } cmd_queue_active[7:4] = 0;
+        field {
+            name = "mram_ready";
+            desc = "Per-bank ready signals for bringing MRAM out of deep
+                    sleep. When the bit is 1, that bank is ready for
+                    operations.";
+            sw = r;
+            hw = w;
+        } mram_ready [11:8] = 0;
+    } bridge_status_reg @0x08;
+
+    // ----------------------------------------------------------------
+    // 0x10: AXI Slave Error Status (clear on read)
+    // ----------------------------------------------------------------
+    reg {
+        name = "AXI Slave Error Status";
+        desc = "Sticky status bits capturing the reason(s) why the bridge
+                returned SLVERR on the AXI bus. Bits are set by hardware and
+                cleared automatically when software reads this register
+                (clear-on-read). Multiple causes may be set simultaneously.";
+        regwidth = 64;
+
+        // Bit 1 — out-of-range write
+        field {
+            name = "oor_write";
+            desc = "Set when a write transaction was rejected with SLVERR
+                    because AWADDR falls outside the valid MRAM window
+                    (AWADDR[31:24] != 0, i.e. AWADDR >= 0x100_0000).";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } oor_write[1:1] = 0;
+
+        // Bit 0 — out-of-range read
+        field {
+            name = "oor_read";
+            desc = "Set when a read transaction was rejected with SLVERR
+                    because ARADDR falls outside the valid MRAM window
+                    (ARADDR[31:24] != 0, i.e. ARADDR >= 0x100_0000).";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } oor_read[0:0] = 0;
+        field {
+            name = "mram_not_ready";
+            desc = "Set when a transaction was rejected with SLVERR because
+                    the targeted MRAM bank reports not-ready.";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } mram_not_ready[2:2] = 0;
+        field {
+            name = "mram_unpowered";
+            desc = "Set when a transaction was rejected with SLVERR because
+                    the targeted MRAM bank reports power-not-ok.";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } mram_unpowered[3:3] = 0;
+        field {
+            name = "maintenance";
+            desc = "Set when a transaction was rejected with SLVERR because
+                    the targeted MRAM bank is in maintenance mode.";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } maintenance[4:4] = 0;
+        field {
+            name = "unrecoverable_error";
+            desc = "Set when read data was returned with an unrecoverable ECC
+                    condition (triple-bit error) and the bridge responded with
+                    SLVERR.";
+            sw = r;
+            hw = r;
+            hwset;
+            onread = rclr;
+        } unrecoverable_error[5:5] = 0;
+
+    } slverr_status_reg @0x10;
+
+    // ----------------------------------------------------------------
+    // 0x18: AXI2MRAM Control
+    // ----------------------------------------------------------------
+    reg {
+        name = "AXI2MRAM Control";
+        desc = "Software control bits for the AXI-to-MRAM bridge.";
+        regwidth = 64;
+
+        field {
+            name = "disable_clock_gate";
+            desc = "Per-bank clock-gate disable control. Bit N disables the
+                    clock gating structure driving MRAM bank N so that a
+                    continuous clock is driven into the bank interface.";
+            sw = rw;
+            hw = r;
+        } disable_clock_gate[3:0] = 0;
+        field {
+            name = "ecc_1bit_intr_mask";
+            desc = "Masks CPU interrupt generation for 1-bit ECC events in
+                    the ET interrupt logic. 1 = masked/suppressed, 0 =
+                    unmasked/enabled. Reset default is 1 (masked).";
+            sw = rw;
+            hw = r;
+        } ecc_1bit_intr_mask[4:4] = 1;
+        field {
+            name = "ecc_2bit_intr_mask";
+            desc = "Masks CPU interrupt generation for 2-bit ECC events in
+                    the ET interrupt logic. 1 = masked/suppressed, 0 =
+                    unmasked/enabled. Reset default is 0 (enabled).";
+            sw = rw;
+            hw = r;
+        } ecc_2bit_intr_mask[5:5] = 0;
+        field {
+            name = "ecc_3bit_intr_mask";
+            desc = "Masks CPU interrupt generation for 3-bit ECC events in
+                    the ET interrupt logic. 1 = masked/suppressed, 0 =
+                    unmasked/enabled. Reset default is 0 (enabled).";
+            sw = rw;
+            hw = r;
+        } ecc_3bit_intr_mask[6:6] = 0;
+    } control_reg @0x18;
+
+    // ----------------------------------------------------------------
+    // 0x20/0x28/0x30: ECC Event Counters (read-only)
+    // ----------------------------------------------------------------
+    reg {
+        name = "ECC 1-bit Error Counter";
+        desc = "Counts observed 1-bit ECC events across all banks/lanes.
+                The counter increments by the number of asserted lane bits per
+                cycle (0..8).";
+        regwidth = 64;
+        field {
+            name = "count";
+            desc = "Accumulated 1-bit ECC event count.";
+            sw = r;
+            hw = rw;
+            counter;
+            incrsaturate;
+            incrwidth = 4;
+        } count[31:0] = 0;
+    } ecc_1bit_error_count_reg @0x20;
+
+    reg {
+        name = "ECC 2-bit Error Counter";
+        desc = "Counts observed 2-bit ECC events across all banks/lanes.
+                The counter increments by the number of asserted lane bits per
+                cycle (0..8).";
+        regwidth = 64;
+        field {
+            name = "count";
+            desc = "Accumulated 2-bit ECC event count.";
+            sw = r;
+            hw = rw;
+            counter;
+            incrsaturate;
+            incrwidth = 4;
+        } count[31:0] = 0;
+    } ecc_2bit_error_count_reg @0x28;
+
+    reg {
+        name = "ECC 3-bit Error Counter";
+        desc = "Counts observed 3-bit ECC events across all banks/lanes.
+                The counter increments by the number of asserted lane bits per
+                cycle (0..8).";
+        regwidth = 64;
+        field {
+            name = "count";
+            desc = "Accumulated 3-bit ECC event count.";
+            sw = r;
+            hw = rw;
+            counter;
+            incrsaturate;
+            incrwidth = 4;
+        } count[31:0] = 0;
+    } ecc_3bit_error_count_reg @0x30;
+};

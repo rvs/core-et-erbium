@@ -1,0 +1,19 @@
+addrmap memories{
+	mem bootrom{
+		name ="BootROM";
+
+		mementries=0x400;
+		memwidth=64;
+		sw=r;
+	};
+	mem sram{
+		name="SRAM";
+		mementries=0x200;
+		memwidth=64;
+		sw=rw;
+	};
+	external bootrom ROM @0 ;
+	external sram SRAM @0x4000;
+
+};
+

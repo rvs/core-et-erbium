@@ -1,0 +1,2 @@
+#!/bin/sh
+srun vcs -sverilog -full64 -R +vcs -q -notice +lint=TFIPC-L +vcs+flush+all +vcs+lic+wait -override_timescale=1ns/1ps bist_tb.sv ../verilog/bist_wrapper.v ../verilog/bist_write.v ../verilog/bist_read.sv ../verilog/bist_mux.v ../ctrl_rte/verilog/ctrl_rte.v ../ctrl_rte/testbench/mram.v ../ctrl_rte/testbench/rom.v +define+RUN_BIST_TRIM +define+RUN_BIST_WRITE +define+START_ADDR=0 +define+DINV=1 +define+RUN_BIST_READ +define+STOP_ON_ERR=1 +define+REG_DIN_INV=0 +define+DINV=1 +define+ECC_EN=0

@@ -1,0 +1,30 @@
+[project]
+name = "hdl-et"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.12.*"
+dependencies = [
+    "cocotbext-axi>=0.1.26",
+    "cocotbext-dyulib>=0.0.4",
+    "cocotbext-jtag>=0.3.1",
+    "cocotbext-uart>=0.1.4",
+    "cocotbext-xspi",
+    "cocotbext-i2c",
+    "copra",
+    "peakrdl>=1.5.0",
+    "peakrdl-bsv>=0.0.3",
+    "peakrdl-markdown>=1.0.3",
+    "peakrdl-python>=2.3.0",
+    "peakrdl-cocotb-ralgen>=0.1.7.post9",
+    "pyelftools",
+    "Mako",
+    "cocotbext-apb>=0.11.0",
+]
+
+[tool.uv.sources]
+cocotbext-xspi = { path = "vendor/cocotbext-xspi" }
+cocotbext-uart = { git = "https://github.com/vyomasystems/cocotbext-uart.git", rev = "parity_update" }
+cocotbext-i2c = {git = "https://github.com/jahagirdar/cocotbext-i2c.git" }
+copra = { git = "https://github.com/cocotb/copra.git" }
+

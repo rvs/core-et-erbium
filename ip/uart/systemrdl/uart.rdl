@@ -1,0 +1,81 @@
+
+addrmap UART_Reg     {
+	alignment = 8;
+	default regwidth =32;
+	name="UART Registers";
+	desc="UART Registers Refer shakti GC doc for details"; 
+	reg {
+		field {sw=rw; hw=r; desc="Baud = Clk_Freq/(16* baud_value)";} baud_value[15:0]=0x5;
+	} BaudReg;
+	reg {
+		field {sw=w; hw=r; desc="";} data[31:0]=0x0;
+	} TxReg;
+	reg {
+		field {sw=r; hw=w; desc="";} data[31:0]=0x0;
+	} RxReg;
+	reg {
+		field {sw=rw;woclr;hw=w; desc="Tx FIFO is Empty";} tx_empty[0:0]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Tx FIFO is Full";} tx_full[1:1]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx FIFO is Not Empty";} rx_notEmpty[2:2]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx FIFO is Full";} rx_full[3:3]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx Parity error";} parity_error[4:4]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx FIFO overflow";} overrun_error[5:5]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx stop bit is zero";} frame_error[6:6]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Rx Data and stop bits are zero";} break_error[7:7]=0x0;
+		field {sw=rw;woclr;hw=w; desc="Threshold level crossed on Rx.";} rx_fifo_threshold[8:8]=0x0;
+	} StatusReg;
+	reg {
+		field {sw=rw; hw=r; desc="Transmit delay count";} delay_control[15:0]=0x0;
+	} DelayReg;
+	reg {
+		field {sw=rw; hw=r; desc="char size of data (max 32b)";} charsize[10:5]=0x8;
+		field {sw=rw; hw=r; desc="0-> no parity, 1 -> odd parity; 2 -> even parity";} parity[4:3]=0x0;
+		field {sw=rw; hw=r; desc="00 -> 1 stop bit; 01 -> 1.5 stop bits ; 10 -> 2 stop bits";} stopbits[2:1]=0x0;
+	} ControlReg;
+// moved one reg from here
+	reg {
+		field {sw=rw; hw=r; desc="";} qual_cycles[7:0]=0x0;
+	} IQC;
+	reg {
+		field {sw=rw; hw=r; desc="";} rx_level[4:0]=0x5;
+	} Rx_Threshold;
+reg {
+		field {sw=r; hw=na; desc="notused";} notused[7:0]=0x0;
+
+} NotUsed;
+	reg {
+desc="RAW interrupt register, the bit is sticky and set when the condition for interrupt occurs and remains set until a value of 1 is written to it.";
+		field {sw=rw;woclr; hwset; desc="Transmission Done Interrupt ";} tx_done[0:0]=0x0;
+		field {sw=rw;woclr; hwset; desc="Transmitter Not Full Interrupt ";} tx_not_full[1:1]=0x0;
+		field {sw=rw;woclr; hwset; desc="Receiver Not Empty Interrupt ";} rx_not_empty[2:2]=0x0;
+		field {sw=rw;woclr; hwset; desc="Receiver Full Interrupt ";} rx_full[3:3]=0x0;
+		field {sw=rw;woclr; hwset; desc="Parity Error Interrupt ";} parity_error[4:4]=0x0;
+		field {sw=rw;woclr; hwset; desc="Overrun Interrupt ";} overrun_error[5:5]=0x0;
+		field {sw=rw;woclr; hwset; desc="Frame Error Interrupt ";} frame_error[6:6]=0x0;
+		field {sw=rw;woclr; hwset; desc="Break Error Interrupt ";} break_error[7:7]=0x0;
+		field {sw=rw;woclr; hwset; desc="RX FIFO ~80% Full Interrupt ";} rx_fifo_threshold[8:8]=0x0;
+	} InterruptRaw;
+	reg {
+desc="interrupt Mask Register, this is anded with the raw interrupt bit. if the result is 1 an interrupt is generated.";
+		field {sw=rw; hw=r; desc="Transmission Done Interrupt Mask";} tx_done_en[0:0]=0x0;
+		field {sw=rw; hw=r; desc="Transmitter Not Full Interrupt Mask";} tx_not_full_en[1:1]=0x0;
+		field {sw=rw; hw=r; desc="Receiver Not Empty Interrupt Mask";} rx_not_empty_en[2:2]=0x0;
+		field {sw=rw; hw=r; desc="Receiver Full Interrupt Mask";} rx_full_en[3:3]=0x0;
+		field {sw=rw; hw=r; desc="Parity Error Interrupt Mask";} parity_error_en[4:4]=0x0;
+		field {sw=rw; hw=r; desc="Overrun Interrupt Mask";} overrun_error_en[5:5]=0x0;
+		field {sw=rw; hw=r; desc="Frame Error Interrupt Mask";} frame_error_en[6:6]=0x0;
+		field {sw=rw; hw=r; desc="Break Error Interrupt Mask";} break_error_en[7:7]=0x0;
+		field {sw=rw; hw=r; desc="RX FIFO ~80% Full Interrupt Mask";} rx_fifo_threshold_en[8:8]=0x0;
+	} InterruptMask;
+	reg {
+		field {sw=r; hw=w; desc="Transmission Done Interrupt ";} tx_done[0:0]=0x0;
+		field {sw=r; hw=w; desc="Transmitter Not Full Interrupt ";} tx_not_full[1:1]=0x0;
+		field {sw=r; hw=w; desc="Receiver Not Empty Interrupt ";} rx_not_empty[2:2]=0x0;
+		field {sw=r; hw=w; desc="Receiver Full Interrupt ";} rx_full[3:3]=0x0;
+		field {sw=r; hw=w; desc="Parity Error Interrupt ";} parity_error[4:4]=0x0;
+		field {sw=r; hw=w; desc="Overrun Interrupt ";} overrun_error[5:5]=0x0;
+		field {sw=r; hw=w; desc="Frame Error Interrupt ";} frame_error[6:6]=0x0;
+		field {sw=r; hw=w; desc="Break Error Interrupt ";} break_error[7:7]=0x0;
+		field {sw=r; hw=w; desc="RX FIFO ~80% Full Interrupt ";} rx_fifo_threshold[8:8]=0x0;
+	} InterruptStatus;
+};

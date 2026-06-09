@@ -1,0 +1,398 @@
+
+<%my (@params)=(
+{ tbl_len=>23, major_rev=>1, minor_rev=>0x9, param_lsb=>0, param_msb=>0xff, ptp=>0x400, addr=>"6_4_" },
+{ tbl_len=>2, major_rev=>1, minor_rev=>1, param_lsb=>0x84, param_msb=>0xff, ptp=>0x700, addr=>"6_7_" },
+{ tbl_len=>3, major_rev=>1, minor_rev=>0, param_lsb=>0x06, param_msb=>0xff, ptp=>0x900, addr=>"6_9_" },
+{ tbl_len=>28, major_rev=>1, minor_rev=>1, param_lsb=>0x87, param_msb=>0xff, ptp=>0xa00, addr=>"6_10_" },
+{ tbl_len=>13, major_rev=>1, minor_rev=>0, param_lsb=>0x09, param_msb=>0xff, ptp=>0xb00, addr=>"6_11_" },
+{ tbl_len=>'0x0A', major_rev=>1, minor_rev=>1, param_lsb=>0x0f, param_msb=>0xff, ptp=>0x1100, addr=>"6_17_" },
+); 
+%>
+
+addrmap SFDP_Reg {
+  name="SFDP Parameters CSR Registers";
+  alignment=4;
+default hw=na;
+default sw=na;
+  default regwidth=32;
+  reg {
+    field {sw=r; desc="SFDP Signature";} signature[31:0]=0x50444653;
+  } reg6_2_1;
+reg {
+    field {sw=r; desc="TBD SFDP Access protocol";} access_protocol[31:24]=0xFA;
+    field {sw=r;hw=r; desc="Num Parameter Header TBD";} numHdr[23:16]=<%=$#params+1%>;
+    field {sw=r; desc="SFDP Version Major";} major[15:8]=1;
+    field {sw=r; desc="SFDP Version Minor";} minor[7:0]=0xC;
+// review table 6.2.3 FA meand 8D profile 2 this will not work for qspi bondout.
+} reg6_2_2;
+<% for (@params) {%>
+reg {
+field {sw=r;desc="Tbl Len";} tbl_len[31:24]=<%=$_->{tbl_len}%>;
+field {sw=r;desc="major_rev";} major_rev[23:16]=<%=$_->{major_rev}%>;
+field {sw=r;desc="minor rev";} minor_rev[15:8]=<%=$_->{minor_rev}%>;
+field {sw=r;desc="parameter id lsb";} id[7:0]=<%=$_->{param_lsb}%>;
+}reg<%=$_->{addr}%>_1;
+reg {
+field {sw=r; desc="Parameter Table ID MSB";} param_id_msb[31:24]=<%=$_->{param_msb}%>;
+field {sw=r; desc="Parameter Table Pointer TBD";} param_tbl_ptr[23:0]=<%=$_->{ptp}%>;
+} reg<%=$_->{addr}%>_2;
+<%};%>
+///////////////////////////////////////////////////////////
+reg {
+field {sw=r; desc="Unused";} unused0[31:23]=0xff;
+field {sw=r; desc="Does not support 1S-1S-4S Fast Read";} fs_1s1s1s[22:22]=0x0;
+field {sw=r; desc="Does not support 1S-4S-4S Fast Read";} fs_1s4s4s[21:21]=0x0;
+field {sw=r; desc="Does not support 1S-2S-2S Fast Read";} fs_1s2s2s[20:20]=0x0;
+field {sw=r; desc="Supports DTR mode";} dtr_mode[19:19]=0x1;
+field {sw=r; desc="Address Bytes (4-Byte Only Addressing)";} addrBytes[18:17]=0x2;
+field {sw=r; desc="Does not support 1S-1S-2S Fast Read";} fs_1s1s2s[16:16]=0x0;
+field {sw=r; desc="Does not support 4KB Erase";} erase_4kb[15:8]=0xff;
+field {sw=r; desc="Unused";} unused1[7:5]=0x7;
+field {sw=r; desc="Write Enable Instruction select for writing to volatile status reg.";} we_instruction[4:4]=0x1;
+field {sw=r; desc="Volatile Status Register Block Protect.";} always_volatile_csr[3:3]=0x1;
+field {sw=r; desc="Write Granularity (1byte).";} write_granularity[2:2]=0x0;
+field {sw=r; desc="Block/Sector Erase size.";} erase_size[1:0]=0x3;// Uniform 4kb erase is unavailable
+} reg_6_4_4 @0x400;
+reg {
+field {sw=r;desc="memory Density(in bits)";} mem_density[31:0]=0xffffff;//16Mbits
+} reg_6_4_5;
+reg {
+field {sw=r; desc="1s-1s-4s fast read instruction";} fr_inst_1s1s4s[31:24]=0xAA;
+field {sw=r; desc="1s-1s-4s fast read num mode clocks";} mode_1s1s4s[23:21]=0x0;
+field {sw=r; desc="1s-1s-4s fast read wait states";} waitstate_1s1s4s[20:16]=0x2;
+field {sw=r; desc="1s-4s-4s fast read wait states";} fr_inst_1s4s4s[15:8]=0xab;
+field {sw=r; desc="1s-4s-4s fast read num mode clocks";} mode_1s4s4s[7:5]=0x0;
+field {sw=r; desc="1s-4s-4s fast read wait states";} waitstate_1s4s4s[4:0]=0x2;
+} reg6_4_6;
+reg {
+field {sw=r; desc="2S mode is not suppported. Reserved";} reserved[31:0]=0;
+} reg6_4_7;
+reg {
+field {sw=r; desc="Supports 4S-4S-4S fast read mode";} mode_4s[4:4]=1;
+field {sw=r; desc="Supports 2S-2S-2S fast read mode(not supported)";} mode_2s[0:0]=0;
+} reg6_4_8;
+reg {
+field {sw=r; desc="2S mode is not suppported. Reserved";} reserved[31:0]=0;
+} reg6_4_9;
+reg {
+field {sw=r; desc="4s-4s-4s fast read instruction";} fr_inst_4s4s4s[31:24]=0xAC;
+field {sw=r; desc="4s-4s-4s fast read num mode clocks";} mode_4s4s4s[23:21]=0x0;
+field {sw=r; desc="4s-4s-4s fast read wait states";} waitstate_4s4s4s[20:16]=0x2;
+} reg6_4_10;
+reg { field {sw=r; desc="Erase instruction 2,1 is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_11;
+reg { field {sw=r; desc="Erase instruction 4,3 is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_12;
+reg { field {sw=r; desc="Erase instruction is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_13;
+reg { field {sw=r; desc="Erase/Program instruction is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_14;
+reg { field {sw=r; desc="Suspend/Resume for Erase/Program instruction is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_15;
+reg { field {sw=r; desc="Suspend/Resume for Erase/Program instruction is not suppported. Reserved";} reserved[31:0]=0; } reg6_4_16;
+reg {
+      field {sw=r; desc="Deep powerdown is supported";} deep_power_down[31:31]=1;
+      field {sw=r; desc="Enter Deep powerdown Instruction";} inst_deep_power_down_enter[30:23]=0xAD;
+      field {sw=r; desc="Exit Deep powerdown Instruction";} inst_deep_power_down_exit[22:15]=0xAE;
+      field {sw=r; desc="Exit Deep powerdown delay units 64us";} exit_delay_units[14:13]=0x3;
+      field {sw=r; desc="Exit Deep powerdown delay count ";} exit_delay_count[12:8]=0x2;
+field {sw=r; desc="device busy poll (not supported)";} dev_busy_poll[7:2]=0;
+field {sw=r; desc="Reserved";} reserved[1:0]=0;
+} reg6_4_17;
+reg {
+field { sw=r; desc="hold/reset disable (not supported)";} hold_rst_support[23:23]=0;
+field {sw=r; desc="quad enable requirement";} quad_enable[22:20]=0;
+field {sw=r; desc="0-4-4 Mode entry method TBD";} mode_entry044[19:16]=0;
+field {sw=r; desc="0-4-4 Mode exit method TBD";} mode_exit044[15:10]=0;
+field {sw=r; desc="0-4-4 Mode supported (XIP)";} xip_supported_044[9:9]=1;
+field {sw=r; desc="4-4-4 Mode enable sequence TBD";} mode_enable444[8:4]=0;
+field {sw=r; desc="4-4-4 Mode disable sequence TBD";} mode_disable444[3:0]=0;
+} reg6_4_18;
+reg {
+field { sw=r; desc="Enter 4 byte addressing;Always in $B mode";} enter_4B_addressing[31:24]=0x40;
+field { sw=r; desc="Exit 4 byte addressing TBD";} exit_4B_addressing[23:14]=0;
+field { sw=r; desc="Soft reset instruction support (not supported)";} soft_reset_support[13:8]=0;
+field {sw=r; desc="volatile register status1";} volatile_status_reg_1[6:0]=0x2;
+} reg_6_4_19;
+
+reg{
+field {sw=r; desc="1s-1s-8s fast read instruction";} fr_inst_1s1s8s[31:24]=0xAF;
+field {sw=r; desc="1s-1s-8s fast read num mode clocks";} mode_1s1s8s[23:21]=0x0;
+field {sw=r; desc="1s-1s-8s fast read wait states";} waitstate_1s1s8s[20:16]=0x2;
+field {sw=r; desc="1s-8s-8s fast read wait states";} fr_inst_1s8s8s[15:8]=0xab;
+field {sw=r; desc="1s-8s-8s fast read num mode clocks";} mode_1s8s8s[7:5]=0x0;
+field {sw=r; desc="1s-8s-8s fast read wait states";} waitstate_1s8s8s[4:0]=0x2;
+} reg_6_4_20;
+
+reg {
+field {sw=r; desc="Byte order in 8D-8D-8D mode same as 1S-1S-1S mode";} byte_order_8D[31:31]=0; 
+field {sw=r; desc="Octal DTR Command/Extension";} cmd_ext[30:29]=0; 
+field {sw=r; desc="Data strobe support in QPI 4S-4D-4D";} data_strobe_support_4s4d4d[27:27]=0; 
+field {sw=r; desc="Data strobe support in QPI 4S-4S-4S";} data_strobe_support_4s4S4S[26:26]=0; 
+field {sw=r; desc="Data strobe STR Waveform TBD";} data_strobe_str_waveform[25:24]=0; 
+field {sw=r; desc="JEDEC reset(not supported)";} jedec_reset[23:23]=0; 
+field {sw=r; desc="Drive Strength TBD";} drive_strength[22:18]=1; 
+} reg_6_4_21;
+reg {
+field {sw=r; desc="octal_enable req";} octal_enable_req[22:20]=1;
+field {sw=r; desc="0-8-8 Mode Entry method";} xip_entry_088[19:16]=1;
+field {sw=r; desc="0-8-8 Mode Exit method TBD";} xip_exit_088[15:10]=0x04;
+field {sw=r; desc="0-8-8 XIP supported";} xip_supported_088[9:9]=0x01;
+field{sw=r;desc="8s8s8s mode enable seq";} enable_seq_8s8s8s[8:4]=2;
+field{sw=r;desc="8s8s8s mode disable seq";} disable_seq_8s8s8s[3:0]=1;
+} reg_6_4_22;
+reg {
+field { sw=r; desc=" max 8D speed using DS 200Mhz";} max_8D_speed_with_ds[31:28]=0x8;
+field { sw=r; desc=" max 8D speed not using DS";} max_8D_speed_without_ds[27:24]=0x8;
+field { sw=r; desc=" max 8S speed using DS 200Mhz";} max_8S_speed_with_ds[23:20]=0x8;
+field { sw=r; desc=" max 8S speed not using DS";} max_8S_speed_without_ds[19:16]=0x8;
+field { sw=r; desc=" max 4S-4D-4D speed using DS";} max_4D_speed_with_ds[15:12]=0x8;
+field { sw=r; desc=" max 4S-4D-4D speed not using DS";} max_4D_speed_without_ds[11:8]=0x8;
+field { sw=r; desc=" max 4S-4S-4S speed using DS 166Mhz";} max_4S_speed_with_ds[7:4]=0x7;
+field { sw=r; desc=" max 4S-4S-4S speed not using DS 200 Mhz";} max_4S_speed_without_ds[3:0]=0x8;
+} reg_6_4_23;
+reg {
+field {sw=r; desc="supports 4S-4D-4D Fast Read";} supports_4s4d4d[3]=1;
+field {sw=r; desc="supports 1S-4D-4D Fast Read";} supports_1s4d4d[2]=1;
+field {sw=r; desc="supports 1S-2D-2D Fast Read";} supports_1s2d2d[1]=0;
+field {sw=r; desc="supports 1S-1D-1D Fast Read";} supports_1s1d1d[1]=0;
+}reg_6_4_24;
+
+reg{
+field {sw=r; desc="1S2D2D and 1S1D1D not supported";} reserved[31:0]=0;
+}reg_6_4_25;
+reg{
+field {sw=r; desc="4s-4d-4d fast read instruction";} fr_inst_4s4d4d[31:24]=0xB0;
+field {sw=r; desc="4s-4d-4d fast read num mode clocks";} mode_4s4d4d[23:21]=0x0;
+field {sw=r; desc="4s-4d-4d fast read wait states";} waitstate_4s4d4d[20:16]=0x2;
+field {sw=r; desc="1s-4d-4d fast read wait states";} fr_inst_1s4d4d[15:8]=0xB1;
+field {sw=r; desc="1s-4d-4d fast read num mode clocks";} mode_1s4d4d[7:5]=0x0;
+field {sw=r; desc="1s-4d-4d fast read wait states";} waitstate_1s4d4d[4:0]=0x2;
+} reg_6_4_26;
+// 6_5_x TBD Sector Map parameter table not implemented.
+// 6_6_x TBD Replay Protected monotonic counter not implemented.
+
+// 6_7_x 4 Byte Address Table
+reg {
+field {sw=r; desc="1s8s8s page program support (no)";} page_program_support_1s8s8s[24:24]=0;
+field {sw=r; desc="1s1s8s page program support (no)";} page_program_support_1s1s8s[23:23]=0;
+field {sw=r; desc="1s8d8d DTR Read cmd inst FDh support(no)";} fr_inst_1s8d8d[22:22]=0;
+field {sw=r; desc="1s8s8s Fast Read cmd inst CCh support(no)";} fr_inst_1s8s8s[21:21]=0;
+field {sw=r; desc="1s1s8s Fast Read cmd inst 7Ch support(no)";} fr_inst_1s1s8s[20:20]=0;
+field {sw=r; desc="Sector cmds not supported";} sector_reserved[19:16]=0;
+field {sw=r; desc="1s4d4d DTR Read cmd inst EEh support(no)";} fr_inst_1s4d4d[15:15]=0;
+field {sw=r; desc="1s2d2d DTR Read cmd inst BEh support(no)";} fr_inst_1s2d2d[14:14]=0;
+field {sw=r; desc="1s1d1d DTR Read cmd inst 0E support(no)";} fr_inst_1s1d1d[13:13]=0;
+field {sw=r; desc="Erase/Page cmds not supported";} erase_reserved[12:6]=0;
+field {sw=r; desc="1s4s4s fast Read cmd inst 3Eh support(yes)";} fr_inst_1s4s4s[5:5]=1;
+field {sw=r; desc="1s1s4s fast Read cmd inst 34h support(yes)";} fr_inst_1s1s4s[4:4]=1;
+field {sw=r; desc="2S not supported";} reserved_2s[3:2]=0;
+field {sw=r; desc="1s1s1s Fast Read cmd inst 0Ch support(yes)";} fr_inst_1s1s1s[1:1]=1;
+field {sw=r; desc="1s1s1s Read cmd inst 13h support(yes)";} r_inst_1s1s1s[0:0]=1;
+} reg_6_7_3 @0x700;
+reg { field {sw=r; desc="erase is not supported";} erase_reserved[31:0]=0;} reg_6_7_4;
+// 6_8_x is not implemented; xSPI Profile 1
+// 6_9_x is implemented
+reg {
+field {sw=r; desc="xspi profile2 support";} xspi_profile_2_support[31:31]=1;
+field {sw=r; desc="Read register wrapped support";} read_reg_wrapped[30:30]=0;
+field {sw=r; desc="Read register linear support";} read_reg_linear[29:29]=1;
+field {sw=r; desc="Read memory wrapped support";} read_mem_wrapped[28:28]=0;
+field {sw=r; desc="Read memory linear support";} read_mem_linear[27:27]=1;
+
+field {sw=r; desc="write register wrapped support";} write_reg_wrapped[26:26]=0;
+field {sw=r; desc="write register linear support";} write_reg_linear[25:25]=1;
+field {sw=r; desc="write memory wrapped support";} write_mem_wrapped[24:24]=0;
+field {sw=r; desc="write memory linear support";} write_mem_linear[23:23]=1;
+field {sw=r; desc="WREN1 support(no)";} wren1_support[22:22]=0;
+field {sw=r; desc="WREN2 support(no)";} wren2_support[21:21]=0;
+field {sw=r; desc="SREN support(no)";} sren_support[20:20]=0;
+field {sw=r; desc="Status register read support(yes)";} sts_reg_read_support[19:19]=1;
+field {sw=r; desc="Status register clear support(yes)";} sts_reg_clr_support[18:18]=1;
+field {sw=r; desc="Cfg register read support(yes)";} cfg_reg_read_suport[17:17]=1;
+field {sw=r; desc="Cfg register load support(yes)";} cfg_reg_load_support[16:16]=1;
+field {sw=r; desc="Deep Power down support(yes)";} deep_pd_support[15:15]=1;
+field{sw=r; desc="program/erase not supported";} pgm_reserved[14:6]=0;
+field {sw=r; desc="enter SPI supported";} enter_spi_supported[5:5]=1;
+field {sw=r; desc="reserved";} reserved[4:0]=0;
+} reg_6_9_3 @0x900;
+reg {
+field {sw=r;desc="200Mhz num dummy cycl required TBD";} num_dymmy_cycl_required[11:7]=2;
+field {sw=r;desc="200Mhz num cfg bit pattern to set num dummy cycl required TBD";} cfg_bit_pattern_num_dymmy_cycl_required[6:2]=2;
+}reg_6_9_4;
+
+reg {
+field {sw=r;desc="166Mhz num dummy cycl required TBD";} num_dymmy_cycl_required_166[31:27]=2;
+field {sw=r;desc="166Mhz num cfg bit pattern to set num dummy cycl required TBD";} cfg_bit_pattern_num_dymmy_cycl_required_166[26:22]=2;
+field {sw=r;desc="133Mhz num dummy cycl required TBD";} num_dymmy_cycl_required_133[21:17]=2;
+field {sw=r;desc="133Mhz num cfg bit pattern to set num dummy cycl required TBD";} cfg_bit_pattern_num_dymmy_cycl_required_133[16:12]=2;
+field {sw=r;desc="100Mhz num dummy cycl required TBD";} num_dymmy_cycl_required_100[11:7]=2;
+field {sw=r;desc="100Mhz num cfg bit pattern to set num dummy cycl required TBD";} cfg_bit_pattern_num_dymmy_cycl_required_100[6:2]=2;
+}reg_6_9_5;
+
+// 6_10_x TBD
+reg { field {sw=r;desc="Address offset for volatile registers TBD";} volatile_address[31:0]=0;} reg_6_10_3 @0xa00;
+reg { field {sw=r;desc="Address offset for non-volatile registers not supported";} nonvolatile_address[31:0]=0;} reg_6_10_4;
+reg {
+field {sw=r;desc="Generic Addressable Read Status/Control register command for volatile registers supported";} gen_reg_read_supported[31:31]=1;
+field {sw=r;desc="Generic Addressable Write Status/Control register command for volatile registers supported";} gen_reg_write_supported[30:30]=1;
+field {sw=r;desc="Number address bytes(32bit)";} num_addr_bytes[29:28]=3;
+field {sw=r;desc="Number of dummy cycles for read in 1s-1s-1s mode";} num_dummy_cycles_1s1s1s[27:26]=0;
+field {sw=r;desc="Number of dummy cycles for read in 2s-2s-2s mode";} num_dummy_cycles_2s2s2s[25:22]=0xf;
+field {sw=r;desc="Number of dummy cycles for read in 4s-4s-4s mode";} num_dummy_cycles_4s4s4s[21:18]=0x0;
+field {sw=r;desc="Number of dummy cycles for read in 4d-4d-4d mode";} num_dummy_cycles_4d4d4d[17:14]=0x0;
+field {sw=r;desc="Number of dummy cycles for read in 8s-8s-8s mode";} num_dummy_cycles_8s8s8s[13:10]=0x0;
+field {sw=r;desc="Number of dummy cycles for read in 8d-8d-8d mode";} num_dummy_cycles_8d8d8d[9:6]=0x0;
+}reg_6_10_5;
+reg { field {sw=r;desc="No Non volatile registers";} reserved[31:0]=0x0; } reg_6_10_6;
+reg { field {sw=r;desc="No Write in progress bit TBD";} reserved[31:0]=0x0; } reg_6_10_7;
+reg { field {sw=r;desc="No Write enable bit TBD";} reserved[31:0]=0x0; } reg_6_10_8;
+reg { field {sw=r;desc="No program Error bit";} reserved[31:0]=0x0; } reg_6_10_9;
+reg { field {sw=r;desc="No Erase Error bit";} reserved[31:0]=0x0; } reg_6_10_10;
+reg { field {sw=r;desc="Variable dummy cycles not supported";} reserved[31:0]=0x0; } reg_6_10_11;
+reg { field {sw=r;desc="Variable dummy cycles (nvreg)not supported";} reserved[31:0]=0x0; } reg_6_10_12;
+reg { field {sw=r;desc="Variable dummy cycles not supported";} reserved[31:0]=0x0; } reg_6_10_13;
+reg { field {sw=r;desc="Variable dummy cycles not supported";} reserved[31:0]=0x0; } reg_6_10_14;
+reg { field {sw=r;desc="Variable dummy cycles not supported";} reserved[31:0]=0x0; } reg_6_10_15;
+reg { field {sw=r;desc="QPI mode not supported TBD";} reserved[31:0]=0x0; } reg_6_10_16;
+reg { field {sw=r;desc="QPI mode not supported TBD";} reserved[31:0]=0x0; } reg_6_10_17;
+reg {
+ field {sw=r;desc="STR/DDR Octal mode Enable Volatile";} octal_mode_enable[31:31]=0x1;
+ field {sw=r;desc="Octal mode Enable polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+} reg_6_10_18;
+reg {
+ field {sw=r;desc="Octal mode Enable non Volatile (not supported)";} reserved[31:0]=0x0;
+}reg_6_10_19;
+reg {
+field {sw=r; desc="SDR/DDR mode select volatile (supported)";} ddr_mode_select_available[31:31]=1;
+ field {sw=r;desc="polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+}reg_6_10_20;
+reg { field {sw=r;desc="SDR/DDR non Volatile (not supported)";} reserved[31:0]=0x0; }reg_6_10_21;
+reg {
+ field {sw=r;desc="STR Octal mode Enable Volatile Dup of 6_10_18? TBD";} octal_mode_enable[31:31]=0x1;
+ field {sw=r;desc="Octal mode Enable polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+} reg_6_10_22;
+reg { field {sw=r;desc="SDR/DDR non Volatile (not supported)";} reserved[31:0]=0x0; }reg_6_10_23;
+reg {
+ field {sw=r;desc="DTR Octal mode Enable Volatile Dup of 6_10_18? TBD";} octal_mode_enable[31:31]=0x1;
+ field {sw=r;desc="Octal mode Enable polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+} reg_6_10_24;
+reg { field {sw=r;desc="SDR/DDR non Volatile (not supported)";} reserved[31:0]=0x0; }reg_6_10_25;
+reg {
+field {sw=r; desc="Deep power down select volatile (supported)";} ddr_mode_select_available[31:31]=1;
+ field {sw=r;desc="polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+}reg_6_10_26;
+reg {
+field {sw=r; desc="Ultra Deep power down select volatile (supported)";} ddr_mode_select_available[31:31]=1;
+ field {sw=r;desc="polarity";} polarity[30:30]=0x0;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+}reg_6_10_27;
+reg {
+field {sw=r; desc="Output drive strength numbits(supported)";} num_bits[31:30]=3;
+ field {sw=r;desc="Bit is addressable";} addressable[28:28]=0x1;
+ field {sw=r;desc="local address in last byte of address(yes)";} local_addr_in_last_byte[27:27]=0x0;
+ field {sw=r;desc="Bit location in reg (TBD)";} bit_loc[26:24]=0x0;
+ field {sw=r;desc="Reg Offset";} reg_offset[23:16]=0x0;
+}reg_6_10_28;
+reg { field {sw=r;desc="non Volatile (not supported)";} reserved[31:0]=0x0; }reg_6_10_29;
+// TBD Bit pattern 6.10.30
+
+//6_11_x XSPI Profile 2.0
+
+reg { field  {sw=r; desc="Volatile reg offset TBD";} offset[31:0]=0; } reg_6_11_3;
+reg { field  {sw=r; desc="non Volatile reg offset TBD";} offset[31:0]=0; } reg_6_11_4;
+reg {
+field  {sw=r; desc="Generic addressable read ctrl/sts registers(yes)";} read_ctrl_sts[31:31]=1; 
+field  {sw=r; desc="Generic addressable write ctrl/sts registers(yes)";} write_ctrl_sts[30:30]=1; 
+field  {sw=r; desc="Address Bytes(6 bytes)";} address_bytes[29:28]=0; 
+field  {sw=r; desc="Dummy cycles for volatile reg read TBD";} dummy_cycles_volative[27:23]=0; 
+field  {sw=r; desc="Dummy cycles for non-volatile reg read TBD";} dummy_cycles_non_volative[22:18]=0; 
+field  {sw=r; desc="WIP (Device busy bit) (not supported)";} wip_supported[17:17]=0; 
+field  {sw=r; desc="WIP Polarity(not supported)";} wip_polarity[16:16]=0; 
+field  {sw=r; desc="Local address of WIP Bit(not supported)";} wip_address_byte_location[15:15]=0; 
+field  {sw=r; desc="Bit location of WIP Bit(not supported)";} wip_bit_location[14:11]=0; 
+field  {sw=r; desc="Address of WIP Bit(not supported)";} wip_address[10:3]=0; 
+field  {sw=r; desc="Reserved";} reserved[2:0]=0; 
+} reg_6_11_5 @0xb00;
+
+reg { field  {sw=r; desc="Program Error (Not Implemented)";} p_error[31:0]=0; } reg_6_11_6;
+reg { field  {sw=r; desc="Erase Error (Not Implemented)";} e_error[31:0]=0; } reg_6_11_7;
+reg { field  {sw=r; desc="Variable number of dummy cycles volatile reg(Not Supported)";} supported[31:31]=0;
+field {sw=r; desc="Reserved";} reserved[30:0]=0;
+ } reg_6_11_8;
+reg { field  {sw=r; desc="Variable number of dummy cycles non-volatile reg(Not Supported)";} supported[31:31]=0;
+field {sw=r; desc="Reserved";} reserved[30:0]=0;
+ } reg_6_11_9;
+reg { field  {sw=r; desc="Variable number of dummy cycles Bit pattern(Not Supported)";} supported[31:31]=0;
+field {sw=r; desc="Reserved";} reserved[30:0]=0;
+ } reg_6_11_10;
+reg { field  {sw=r; desc="Variable number of dummy cycles Bit pattern(Not Supported)";} supported[31:31]=0;
+field {sw=r; desc="Reserved";} reserved[30:0]=0;
+ } reg_6_11_11;
+reg { field  {sw=r; desc="Variable number of dummy cycles Bit pattern(Not Supported)";} supported[31:31]=0;
+field {sw=r; desc="Reserved";} reserved[30:0]=0;
+ } reg_6_11_12;
+reg {
+field {sw=r;desc="output drive strength num_bits (volatile)";} drive_strength_num_bits[31:30]=3;
+field {sw=r;desc="addr in last_byte TBD";}addr_not_in_last_byte[29:29]=0;
+field {sw=r;desc="Bit location of MSB Bit TBD";} msb_bit_location[28:25]=0;
+field {sw=r;desc="Address of register TBD (typo in spec?)";} addr[24:17]=0;
+}reg_6_11_13;
+reg {field{sw=r; desc="output drive strength nv (not implemented)";}reserved=0;} reg_6_11_14;
+reg {field{sw=r; desc="output drive strength bit pattern TBD";} tbd=0;} reg_6_11_15;
+
+// Reg 6_12_x multi chip CSR registers Do we need to support this? TBD
+
+// Reg 6_17_x GRAM Register
+reg {
+field {sw=r; desc="Multi-Die Address offset for Addressable Register TBD";} md_address_offset[31:28]=0;
+field {sw=r; desc="Active-Die Selection for Multi Die Package TBD";} md_active_die[27:24]=0;
+field {sw=r; desc="Multi-Die Addressable reg read access TBD";} md_address_read_access[23:20]=0;
+field {sw=r; desc="Multi-Die Addressable reg read access TBD";} md_address_write_access[19:16]=0;
+field {sw=r; desc="Multi-Die Addressformat TBD";} md_address_format[11:8]=4; //32b address
+field {sw=r; desc="Address Shift TBD";} address_shift[5:5]=0; 
+field {sw=r; desc="Gram SPI Mode TBD";} gram_spi[4:4]=1; 
+} reg_6_17_3;
+reg {
+field {sw=r; desc="Volatile address offset TBD";} volatile_addr_offset[31:28]=0; 
+field {sw=r; desc="Write enable";} write_enable[27:24]=0; 
+field {sw=r; desc="Dummy cycles override";} dummy_cycles_override[23:21]=0; 
+field {sw=r; desc="Dummy cycles";} dummy_cycles[20:16]=8; 
+field {sw=r; desc="Read Opcode";} read_opcode[15:8]=0x65; 
+field {sw=r; desc="Write Opcode";} write_opcode[7:0]=0x71; 
+} reg_6_17_4;
+reg {
+field {sw=r; desc="Volatile address offset TBD";} volatile_addr_offset[31:28]=0; 
+field {sw=r; desc="Write enable";} write_enable[27:24]=0; 
+field {sw=r; desc="Dummy cycles override";} dummy_cycles_override[23:21]=0; 
+field {sw=r; desc="Dummy cycles";} dummy_cycles[20:16]=8; 
+field {sw=r; desc="Read Opcode";} read_opcode[15:8]=0x65; 
+field {sw=r; desc="Write Opcode";} write_opcode[7:0]=0x71; 
+} reg_6_17_5;
+reg {
+field {sw=r; desc="Aux 2";} aux2[31:24]=0x5; 
+field {sw=r; desc="Aux 1 TBD SR address";} aux1[23:16]=0x0; 
+field {sw=r; desc="Dymmy Cycles";} dummy_cycles[14:12]=0x2; 
+field {sw=r; desc="SR Access";} statreg_access[11:8]=0x1; 
+field {sw=r; desc="SR bit 0 is busy flag";} statreg_bit0[3:0]=0x1; 
+} reg_6_17_6;
+// TBD Stopping Gram Registers. This is not making sense
+};

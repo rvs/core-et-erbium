@@ -1,0 +1,11 @@
+`include "system.rdl"
+`include "hyperbus.rdl"
+`include "mram.rdl"
+`include "periph.rdl"
+addrmap Erbium_CPU {
+name= "Erbium Register map as seen from CPU";
+System_Reg system_registers @0x2000000;
+MRAM_Reg mram_registers @0x2001000;
+Periph_Reg peripheral_registers @0x2002000;
+Hyperbus_Reg hyperbus_registers @0x2003000;
+};

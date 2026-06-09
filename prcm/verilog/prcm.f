@@ -1,0 +1,6 @@
+power_aware_reset_ctrl.v
+prcm_clk_divider.v
+prcm_clk_mux_gf.v
+prcm_et.v
+prcm_reset_cause.v
+et_reset_sync_2ff.v

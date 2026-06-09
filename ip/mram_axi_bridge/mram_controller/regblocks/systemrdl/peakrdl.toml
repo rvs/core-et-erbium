@@ -1,0 +1,5 @@
+[regblock]
+default_reset = "arst_n"
+
+[regblock.cpuifs]
+axi4-lite-flat-resp1 = "peakrdl_cpuifs:AXI4Lite_Cpuif_flattened_resp1"

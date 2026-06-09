@@ -1,0 +1,23 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+# Vendored copy of cocotbext-xspi (see VENDORED.md). The upstream derives its
+# version from git tags (pdm scm); since this is a source snapshot with no git
+# history, the version is pinned statically here so it builds as a path dep.
+[project]
+name = "cocotbext-xspi"
+version = "0.0.0"
+description = "COCOTB VIP for xspi protocol"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["cocotb>=2.0", "cocotb-bus>=0.2.1", "cocotbext-dyulib>=0.0.4"]
+authors = [{name = "Vijayvithal Jahagirdar", email = "jvs@dyumnin.com"}]
+maintainers = [{name = "Vijayvithal Jahagirdar", email = "jvs@dyumnin.com"}]
+
+[tool.pdm.build]
+includes = ["src"]

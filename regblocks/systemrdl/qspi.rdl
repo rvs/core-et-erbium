@@ -1,0 +1,122 @@
+addrmap QSPI_Reg {
+    default regwidth = 32;
+    alignment = 8;
+    name = "QSPI Registers";
+    desc = "Shakti QSPI Registers";
+
+    //-------------------------------------------------
+    // 0x00 CONTROL REGISTER (CR)
+    //-------------------------------------------------
+    reg {
+        field {sw=rw; hw=r; desc="Clock prescaler (PRESCALER[7:0])";} prescaler[31:24] = 0x0;
+        field {sw=rw; hw=r; desc="Polling match mode (0=AND,1=OR)";} pmm[23:23] = 0x0;
+        field {sw=rw; hw=r; desc="Automatic polling mode stop";} apms[22:22] = 0x0;
+        field {sw=rw; hw=r; desc="Timeout interrupt enable";} toie[20:20] = 0x0;
+        field {sw=rw; hw=r; desc="Status match interrupt enable";} smie[19:19] = 0x0;
+        field {sw=rw; hw=r; desc="FIFO threshold interrupt enable";} ftie[18:18] = 0x0;
+        field {sw=rw; hw=r; desc="Transfer complete interrupt enable";} tcie[17:17] = 0x0;
+        field {sw=rw; hw=r; desc="Transfer error interrupt enable";} teie[16:16] = 0x0;
+        field {sw=rw; hw=r; desc="FIFO threshold level";} fthres[12:8] = 0x0;
+        field {sw=rw; hw=r; desc="Flash select";} fsel[7:7] = 0x0;
+        field {sw=rw; hw=r; desc="Dual flash mode enable";} dfm[6:6] = 0x0;
+        field {sw=rw; hw=r; desc="Sample shift";} sshift[4:4] = 0x0;
+        field {sw=rw; hw=r; desc="Timeout counter enable";} tcen[3:3] = 0x0;
+        field {sw=rw; hw=r; desc="DMA enable";} dmaen[2:2] = 0x0;
+        field {sw=rw; hw=r; desc="Abort request";} abort[1:1] = 0x0;
+        field {sw=rw; hw=r; desc="QSPI enable";} qspi_enable[0:0] = 0x0;
+    } CR @0x00;
+
+    //-------------------------------------------------
+    // 0x04 DEVICE CONFIG REGISTER (DCR)
+    //-------------------------------------------------
+    reg {
+        field {sw=rw; hw=r; desc="Flash memory size";} fsize[20:16] = 0x0;
+        field {sw=rw; hw=r; desc="Chip select high time";} csht[10:8] = 0x0;
+        field {sw=rw; hw=r; desc="Clock mode (0=Mode0,1=Mode3)";} ckmode[0:0] = 0x0;
+    } DCR ;
+
+    //-------------------------------------------------
+    // 0x08 STATUS REGISTER (SR)
+    //-------------------------------------------------
+    reg {
+        field {sw=r; hw=w; desc="FIFO level";} flevel[13:8];
+        field {sw=r; hw=w; desc="Busy flag";} busy[5:5];
+        field {sw=r; hw=w; desc="Timeout flag";} tof[4:4];
+        field {sw=r; hw=w; desc="Status match flag";} smf[3:3];
+        field {sw=r; hw=w; desc="FIFO threshold flag";} ftf[2:2];
+        field {sw=r; hw=w; desc="Transfer complete flag";} tcf[1:1];
+        field {sw=r; hw=w; desc="Transfer error flag";} tef[0:0];
+    } SR ;
+
+    //-------------------------------------------------
+    // 0x0C FLAG CLEAR REGISTER (FCR)
+    //-------------------------------------------------
+    reg {
+        field {sw=rw; hw=na; desc="Clear timeout flag";} ctof[4:4] = 0x0;
+        field {sw=rw; hw=na; desc="Clear status match flag";} csmf[3:3] = 0x0;
+        field {sw=rw; hw=na; desc="Clear transfer complete flag";} ctcf[1:1] = 0x0;
+        field {sw=rw; hw=na; desc="Clear transfer error flag";} ctef[0:0] = 0x0;
+    } FCR ;
+
+    //-------------------------------------------------
+    // 0x10 DATA LENGTH REGISTER (DLR)
+    //-------------------------------------------------
+    reg {
+        field {sw=rw; hw=r; desc="Number of bytes to transfer (value+1)";} dl[31:0] = 0x0;
+    } DLR ;
+
+    //-------------------------------------------------
+    // 0x14 COMM CONFIG REGISTER (CCR)
+    //-------------------------------------------------
+    reg {
+        field {sw=rw; hw=r; desc="DDR mode enable";} ddrm[31:31] = 0x0;
+        field {sw=rw; hw=r; desc="DDR hold quarter cycle";} dhhc[30:30] = 0x0;
+        field {sw=rw; hw=r; desc="Send instruction only once";} sioo[28:28] = 0x0;
+        field {sw=rw; hw=r; desc="Functional mode";} fmode[27:26] = 0x0;
+        field {sw=rw; hw=r; desc="Data mode";} dmode[25:24] = 0x0;
+        field {sw=rw; hw=r; desc="Dummy confirmation";} d_conf[23:23] = 0x0;
+        field {sw=rw; hw=r; desc="Dummy cycles";} dcyc[22:18] = 0x0;
+        field {sw=rw; hw=r; desc="Alternate byte size";} absize[17:16] = 0x0;
+        field {sw=rw; hw=r; desc="Alternate byte mode";} abmode[15:14] = 0x0;
+        field {sw=rw; hw=r; desc="Address size";} adsize[13:12] = 0x0;
+        field {sw=rw; hw=r; desc="Address mode";} admode[11:10] = 0x0;
+        field {sw=rw; hw=r; desc="Instruction mode";} imode[9:8] = 0x0;
+        field {sw=rw; hw=r; desc="Instruction opcode";} instr[7:0] = 0x0;
+    } CCR ;
+
+    //-------------------------------------------------
+    // 0x18 ADDRESS REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Flash address";} address[31:0] = 0x0; } AR ;
+
+    //-------------------------------------------------
+    // 0x1C ALTERNATE BYTE REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Alternate bytes";} alternate_bytes[31:0] = 0x0; } ABR ;
+
+    //-------------------------------------------------
+    // 0x20 DATA REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=rw; desc="Data register (FIFO access)";} data[31:0] = 0x0; } DR ;
+
+    //-------------------------------------------------
+    // 0x24 POLLING STATUS MASK REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Polling status mask";} mask[31:0] = 0x0; } PSMKR ;
+
+    //-------------------------------------------------
+    // 0x28 POLLING STATUS MATCH REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Polling status match value";} match[31:0] = 0x0; } PSMAR ;
+
+    //-------------------------------------------------
+    // 0x2C POLLING INTERVAL REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Polling interval in clock cycles";} interval[31:0] = 0x0; } PIR ;
+
+    //-------------------------------------------------
+    // 0x30 LOW POWER TIMEOUT REGISTER
+    //-------------------------------------------------
+    reg { field {sw=rw; hw=r; desc="Low power timeout value";} timeout[31:0] = 0x0; } LPTR ;
+
+};

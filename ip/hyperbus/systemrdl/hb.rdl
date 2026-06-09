@@ -1,0 +1,15 @@
+addrmap HB_Reg {
+  name="FPGA Hyperbus Registers";
+  alignment=4;
+  default regwidth=32;
+  reg {
+    field {sw=rw; hw=r; desc="Initial Latency";} initial_latency[3:0]=6;
+    field {sw=rw; hw=r; desc="Burst Length";} burst_length[6]=0;
+    field {sw=rw; hw=r; desc="Burst Length";} burst_type[1]=0;
+    field {sw=rw; hw=r; desc="Access width 0:32bit, 1:64bit";} txn_32_64[1]=0;
+    field {sw=rw; hw=r; desc="Reg Space";} reg_access[1]=0;
+  } HB_CTRL;
+reg{
+    field {sw=r; hw=rw; desc="Transaction in Progress";} busy[0:0]=0;
+  } HB_STATUS;
+};

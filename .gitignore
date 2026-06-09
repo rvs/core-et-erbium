@@ -1,0 +1,61 @@
+#########
+# Exclude all by default – CORRECT WAY
+#########
+*
+
+# Allow traversing into all directories
+!*/
+
+# Explicitly keep the directories we care about
+!.gitignore
+!/3p/
+!/bsv/
+!/doc/
+!/systemC/
+!/systemrdl/
+!/tb/
+!/verilog/
+
+# Now bring back the file types we want
+!*.v
+!*.sv
+!*.svh
+!*.bsv
+!*.bh
+!*.vhdl
+!*.vh
+!*.sva
+!*.sh
+!*.pl
+!*.py
+!*.tcl
+!*.c
+!*.h
+!*.f
+!*.rdl
+!*.md
+!*.drawio
+!*.cfg
+!*.json
+!*.yaml
+!*.sdc
+!*.spf
+!*.lib
+!*.scf
+!*.upf
+!Makefile
+!*.mk
+!*.toml
+!LICENSE
+
+bluespec.json
+
+# Ignore headerize private config
+.headerize.config
+
+venv
+sim_build
+__pycache__
+*ral/
+*DVEfiles/
+*vcdplus*

@@ -1,0 +1,20 @@
+// Pull in the MRAM controller test register definitions
+`include "../../mram_controller/regblocks/systemrdl/erbium_test_registers.rdl"
+
+// Pull in the AXI-to-MRAM bridge register definitions
+`include "axi2mram_regs.rdl"
+
+addrmap axi2mram_bridge_registers {
+    name = "AXI-to-MRAM Bridge Register Map";
+    desc = "Unified register map for the AXI-to-MRAM bridge. Contains bridge
+            configuration registers and per-bank MRAM controller test registers.";
+
+    // Bridge control/status registers at base 0x0000
+    Axi2Mram_Regs bridge_regs @0x0000;
+
+    // Per-bank MRAM controller test registers (matching mram_controller layout)
+    external MRAM_Controller_Test_Regs bank0_tregs @0x0100;
+    external MRAM_Controller_Test_Regs bank1_tregs @0x0200;
+    external MRAM_Controller_Test_Regs bank2_tregs @0x0300;
+    external MRAM_Controller_Test_Regs bank3_tregs @0x0400;
+};

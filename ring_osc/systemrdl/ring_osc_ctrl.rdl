@@ -1,0 +1,110 @@
+// ring_osc_ctrl.rdl
+//
+// Control register for the ring_osc module (ring_osc.sv).
+//
+// Usage in a top-level addrmap:
+//
+//   `include "ring_osc_ctrl.rdl"
+//
+//   addrmap my_map {
+//       ...
+//       ring_osc_ctrl ring_osc_ctrl_r @ <offset>;
+//       ...
+//   };
+//
+// The hw outputs of this register connect directly to the input pins of
+// ring_osc as follows:
+//
+//   ring_osc u_ring_osc (
+//       .en             (ring_osc_ctrl_r.en),
+//       .divby2_sel     (ring_osc_ctrl_r.divby2_sel),
+//       .trm            (ring_osc_ctrl_r.trm),
+//       .dbg_en         (ring_osc_ctrl_r.dbg_en),
+//       .dbg_anachip_en (ring_osc_ctrl_r.dbg_anachip_en),
+//       .dbg_rohcip_en  (ring_osc_ctrl_r.dbg_rohcip_en),
+//       .dbg_sah_en_b   (ring_osc_ctrl_r.dbg_sah_en_b),
+//       .clk            (ring_osc_clk)
+//   );
+
+reg ring_osc_ctrl {
+    name = "Ring Oscillator Control";
+    desc = "Controls the ring oscillator (ring_osc) input pins.
+            In normal mode (dbg_en=0), only en, divby2_sel, and trm are active.
+            In debug mode (dbg_en=1), the dbg_* fields independently gate the
+            analog bias block (anachip) and the oscillator core (rochip).";
+
+    default sw = rw;
+    default hw = r;
+
+    // ------------------------------------------------------------------ //
+    // Normal operation fields
+    // ------------------------------------------------------------------ //
+
+    field {
+        sw = rw; hw = r;
+        desc = "Master oscillator enable. Drive high to power up both the
+                analog bias block (anachip) and the ring oscillator core
+                (rochip). Has no effect when dbg_en is asserted.";
+    } en[0:0] = 1;
+
+    field {
+        sw = rw; hw = r;
+        desc = "Divide-by-2 frequency select.
+                0: Full-speed range (899 MHz to 1.608 GHz, set by trm).
+                1: Half-speed range (449 MHz to 794 MHz, set by trm).";
+    } divby2_sel[1:1] = 1;
+
+    field {
+        sw = rw; hw = r;
+        desc = "Frequency trim code. Selects the oscillator output frequency
+                within the range determined by divby2_sel.
+                0x00 = fastest (1.608 GHz or 794 MHz).
+                0x1F = slowest (899 MHz or 449 MHz).
+                Frequency decreases linearly with increasing trim value.";
+    } trm[6:2] = 5'h1F;
+
+    // ------------------------------------------------------------------ //
+    // Debug override fields (active only when dbg_en = 1)
+    // ------------------------------------------------------------------ //
+
+    field {
+        sw = rw; hw = r;
+        desc = "Debug override enable. When asserted, the en input is ignored
+                and dbg_anachip_en and dbg_rohcip_en independently control
+                the analog bias block and oscillator core respectively.
+                dbg_sah_en_b also becomes active.
+                0: Normal mode -- en controls both blocks.
+                1: Debug mode  -- dbg_* fields control each block separately.";
+    } dbg_en[7:7] = 0;
+
+    field {
+        sw = rw; hw = r;
+        desc = "Debug enable for the analog bias block (anachip).
+                Only active when dbg_en=1.
+                When asserted with dbg_en=1, powers up the anachip and
+                drives h1_mnvdd09_g high, which is required for the
+                oscillator core to run.
+                When deasserted, h1_mnvdd09_g is held low and the
+                oscillator core cannot oscillate regardless of dbg_rohcip_en.";
+    } dbg_anachip_en[8:8] = 0;
+
+    field {
+        sw = rw; hw = r;
+        desc = "Debug enable for the ring oscillator core (rochip).
+                Only active when dbg_en=1.
+                When asserted with dbg_en=1 and dbg_anachip_en=1, the
+                oscillator core is enabled and clk will toggle.
+                When deasserted, the oscillator core is disabled and clk
+                is held low regardless of dbg_anachip_en.";
+    } dbg_rohcip_en[9:9] = 0;
+
+    field {
+        sw = rw; hw = r;
+        desc = "Debug SAH enable (active low). Only active when dbg_en=1.
+                Selects the anachip operating mode:
+                0: Normal SAH operation  (anachip mode 3'b100, h1=1).
+                1: Test mode, high power (anachip mode 3'b101, h1=1).
+                In both cases h1_mnvdd09_g remains high when dbg_anachip_en=1;
+                this bit selects the internal anachip bias configuration only.";
+    } dbg_sah_en_b[10:10] = 0;
+};

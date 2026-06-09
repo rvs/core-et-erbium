@@ -1,0 +1,64 @@
+addrmap SCCR_Reg {
+name ="sccr";
+desc="Status and control Registers";
+default regwidth =64;
+default alignment = 64;
+default sw=rw;
+default hw=na;
+reg {
+	name = "id0";
+	field {
+		desc = "Manufacturer: TODO check how to obtain this number";
+	} mgf_id[3:0] = 2;
+	field {
+		desc = "DEVID0 TODO Use as suitable";
+	} devid0[15:4] = 0;
+} ID0 @ 0x0;
+
+reg {
+	name = "ID1";
+
+	field {
+		desc = "TODO Use as appropriate";
+	} devid1[15:4] = 0;
+	field {
+		desc = "Device Type set to hyperram";
+	} dev_type[3:0] = 0;
+} ID1 ;
+
+reg {
+	field { sw=rw;hw=r;desc="Ultra Deep Power down.";} UltraDeepPowerDown[17:17] = 0;
+	field { sw=rw; hw=r;desc="Enable bust access. Applicable only to memory access. Register access are one at a time";} BurstEnable[16:16] = 0;
+	field { sw=rw; hw=r;desc="Deep Power down, Not too deep, not too shallow";} DeepPowerDown[15:15] = 0;
+	field { sw=r; hw=r;desc="Drive Strength.";} DriveStrength[14:12] = 3;
+	field { sw=r; } Reserved[11:8] = 1;
+	field { sw=rw; hw=r;desc="Initial Latency.";} InitialLatency[7:4] = 0x8;
+	field { sw=r;hw=r;desc="Fixed Latency";} FixedLatency[3:3] = 0x1;
+	field { sw=r; hw=r;desc="Burst Enable";} HybridBurstEnable[2:2] = 0x0;
+	field { sw=rw; hw=r;desc="Burst Length";} BurstLength[1:0] = 0x2;
+} CFG ;
+
+
+reg {
+	field {sw=r;hw=w;desc = "write in progress; Valid only after a write mem transaction";} wip[0:0]=0x0;
+// field {sw=rw; hw=r; desc="deep power down mram off";} deep_power_down[2:2]=0x0;
+// field {sw=rw; hw=r; desc="ultra deep power down mram and cpu off";} ultra_deep_power_down[3:3]=0x0;
+} xspi_status;
+reg {
+// 	field {sw=rw; hw=r; desc="QPI Enable";} qpi_enable[31:31]=0x0;
+// 	field {sw=rw; hw=r; desc="octal enable";} octal_enable[30:30]=0x0;
+// 	field {sw=rw; hw=r; desc="ddr enable";} ddr_enable[15:15]=0x0;
+field {sw=rw;hw=r;desc="Use xspi clock as system clock";} interrupt_enable[1:1]=0;
+field {sw=rw;hw=r;desc="Use xspi clock as system clock";} use_xspi_clk[0:0]=0;
+ } xspi_control;
+reg {
+field {sw=rw;hw=rw; desc="CMD Rate";} cmd_rate[8]=0;
+field {sw=rw;hw=rw; desc="CMD Rate";} addr_rate[8]=0;
+field {sw=rw;hw=rw; desc="CMD Rate";} data_rate[8]=0;
+} xspi_rates;
+reg {
+field {sw=r;hw=rw;rclr; desc="AXI Resp Error";} axi_resp[1:0]=0;
+field {sw=r;hw=rw;rclr; desc="Read FIFO Underflow Error";} read_underflow[2:2]=0;
+field {sw=r;hw=rw;rclr; desc="Write FIFO Overflow Error";} write_overflow[3:3]=0;
+} interrupt_status;
+};

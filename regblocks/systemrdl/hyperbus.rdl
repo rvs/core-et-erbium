@@ -1,0 +1,105 @@
+
+addrmap Hyperbus_Reg {
+	name = "HyperRAM";
+	desc = "Register description of HyperRAM  refer Register space of Cypress_hyperbus_specification.pdf";
+
+	default regwidth = 32;
+	default sw = rw;
+	default hw = r;
+
+	reg {
+		name = "id0";
+		field {
+			desc = "Manufacturer: TODO check how to obtain this number";
+		} mgf_id[3:0] = 2;
+		field {
+			desc = "DEVID0 TODO Use as suitable";
+		} devid0[15:4] = 0;
+	} ID0 @ 0x0;
+
+	reg {
+		name = "ID1";
+
+		field {
+			desc = "TODO Use as appropriate";
+		} devid1[15:4] = 0;
+		field {
+			desc = "Device Type set to hyperram";
+		} dev_type[3:0] = 0;
+	} ID1 @ 0x4;
+
+	reg {
+		field { sw=rw; desc="Enable bust access. Applicable only to memory access. Register access are one at a time";} BurstEnable[16:16] = 0;
+		field { sw=rw; } DeepPowerDown[15:15] = 1;
+		field { sw=r; } DriveStrength[14:12] = 0;
+		field { sw=r; } Reserved[11:8] = 1;
+		field { sw=rw; } InitialLatency[7:4] = 0x6;
+		field { sw=r; } FixedLatency[3:3] = 0x1;
+		field { sw=r; } HybridBurstEnable[2:2] = 0x0;
+		field { sw=rw; } BurstLength[1:0] = 0x2;
+
+	} CFG @ 0x8;
+	reg{
+		field {sw=rw;hw=r;} tp_add[3:0]=0;
+		field {sw=rw;hw=r;} tp_ce[4:4]=0;
+		field {sw=rw;hw=r;} tp_we[5:5]=0;
+	} TP0 @ 0x40;
+	reg {
+		field {sw=rw;hw=r;} tp_bwe_low[31:0]=0;
+	} TP0_BWE_Low @0x48;
+	reg {
+		field {sw=rw;hw=r;} tp_bwe_high[31:0]=0;
+	} TP0_BWE_High @0x50;
+	reg {
+		field {sw=rw;hw=r;} tp_din_low[31:0]=0;
+	} TP0_DIN_Low @0x58;
+	reg {
+		field {sw=rw;hw=r;} tp_din_high[31:0]=0;
+	} TP0_DIN_High @0x60;
+
+	reg {
+		field {sw=r; hw=w;} tp_busy[0:0]=0;
+		field {sw=r; hw=w;} tp_valid[1:1]=0;
+	} TP0_STATUS@0x68;
+
+	reg {
+		field {sw=r;hw=w;} tp_regout_low[31:0]=0;
+	} TP0_REGOUT_LOW @0x70;
+	reg {
+		field {sw=r;hw=w;} tp_regout_high[31:0]=0;
+	} TP0_REGOUT_HIGH @0x78;
+reg{
+field {desc="Put the CPU in wait state at reset when in hyperbus mode.";sw=rw;hw=r;} cpu_wait[0:0]=1;
+}CPU_CONFIG @0x80;
+
+	reg{
+		field {sw=rw;hw=r;} tp_add[3:0]=0;
+		field {sw=rw;hw=r;} tp_ce[4:4]=0;
+		field {sw=rw;hw=r;} tp_we[5:5]=0;
+	} TP1 @ 0x90;
+	reg {
+		field {sw=rw;hw=r;} tp_bwe_low[31:0]=0;
+	} TP1_BWE_Low @0x98;
+	reg {
+		field {sw=rw;hw=r;} tp_bwe_high[31:0]=0;
+	} TP1_BWE_High @0x100;
+	reg {
+		field {sw=rw;hw=r;} tp_din_low[31:0]=0;
+	} TP1_DIN_Low @0x108;
+	reg {
+		field {sw=rw;hw=r;} tp_din_high[31:0]=0;
+	} TP1_DIN_High @0x110;
+
+	reg {
+		field {sw=r; hw=w;} tp_busy[0:0]=0;
+		field {sw=r; hw=w;} tp_valid[1:1]=0;
+	} TP1_STATUS@0x118;
+
+	reg {
+		field {sw=r;hw=w;} tp_regout_low[31:0]=0;
+	} TP1_REGOUT_LOW @0x120;
+	reg {
+		field {sw=r;hw=w;} tp_regout_high[31:0]=0;
+	} TP1_REGOUT_HIGH @0x128;
+
+};

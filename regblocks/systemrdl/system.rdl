@@ -1,0 +1,193 @@
+`include "../../ring_osc/systemrdl/ring_osc_ctrl.rdl"
+`include "../../tsense/systemrdl/tsense.rdl"
+reg clock_divider{
+field {sw=rw; hw=r; desc="clock divider. output clk is 2 x count ";} count[3:0]=0xf;
+field {sw=rw; hw=r; desc="Enable clk divider";} div_enable[4:4]=0x1;
+} ;
+
+addrmap System_Reg {
+	name = "System Registers";
+	desc = "Register Controlling System Behavior";
+	alignment = 8;
+	default regwidth = 32;
+	default sw = r;
+	default hw = na;
+
+	reg {
+		desc="Device identifier, used by software to identify the device family (chipid) variant, and bugfix version";
+		field {sw=r; } chipid[31:16]=0xeb68;
+		field {sw=r; } variation[15:8]=0x0;
+		field {sw=r; } respin[7:0]=0x0;
+	} Version @ 0x0;
+
+	reg { desc="System configuration fields. use to enable/disable various features";
+		field {sw=rw;hw=r; desc="reg interrupt:Writing to this bit generates an interrupt.";} sys_interrupt_enable[0:0] = 0;
+		field {sw=rw;hw=r; desc="connected to mram_startup_bypass of mram_wrapper"; } mram_startup_bypass[1:1] = 0;
+		field {sw=rw;hw=r;swmod; desc="Watchdog Disable";} wdog_disable[2:2]=1;
+		field {sw=rw;hw=r; desc="I2C Enable";} i2c_enable[3:3]=0x0;
+		field {sw=rw;hw=r; desc="SPI Enable";} spi_enable[1]=0x1;
+		field {sw=rw;hw=r; desc="QSPI Enable";} qspi_enable[1]=0x0;
+		field {sw=rw;hw=r; desc="UART Enable";} uart_enable[1]=0x0;
+		field {sw=rw;hw=r; desc="OSC_Out Enable";} osc_out_enable[1]=0x0;
+	} SystemConfig ;
+
+	reg{
+		desc="The watchdog detects 'hang' conditions and resets the system. This feature is disabled by default. Clear `cpu_config.wdog_disable` to enable this. Once enabled, S/W should write to `Watchdog.kick` to reset the `WATCHDOG_COUNT.count` field. If the count reaches 0, it triggers a system reset.";
+		field {sw=rw; hw=r;desc="When the watchdog timer is enabled it counts down from this value";} watchdog_count[31:0] = 0xffff;
+	} watchdog_count ;
+
+	reg {
+		field {sw=rw;hw=r; singlepulse; desc="Resets the watchdog timer, cpu needs to regularly write to this bit to aviod a watchdog timeout based reset of the device";  } kick[7:7]=0;
+	} Watchdog;
+
+
+
+
+	reg {
+		field {sw=rw;hw=r;rclr;  desc="Write to this bit to generate an interrupt. Clear on read";} interrupt[0:0]=0x0;
+		field {sw=r;hw=r;rclr;hwset;  desc="GPIO In Interrupt. Clear on read";} gpio_interrupt[1:1]=0x0;
+	} SysInterrupt;
+
+	reg {
+		field {sw=rw;hw=r;      desc="System Soft Reset, Active High";} soft_reset[0:0]=0;
+		field {sw=rw;hw=r;hwset;desc="CPU Warm Reset, Active High"; } cpu_warm_reset[1:1]=0;
+		field {sw=rw;hw=r;      desc="MRAM Resetn, Active Low"; } mram_rst_b[2:2] = 1;
+		field {sw=rw;hw=r;singlepulse;desc="CPU cold Reset, Self clearing Active High"; } cpu_soft_reset[3:3]=0;
+	} SoftReset;
+
+
+	reg {
+		desc="This register reports the cause of reset. There are multiple reset sources.
+			* Power on Reset,
+			* Brownout Reset, and
+				* Various S/W reset requests. These clear on read bits capture the reset cause since the last read
+				**Note** if the por bit is set ignore the other cause registers, they will have random values until the first read.";
+
+		field {sw=r; swacc;hw=w;      desc="System POR was toggled";} por[0:0];
+		field {sw=r; swacc;hw=w;      desc="Watchdog was enabled and CPU failed to clear the watchdog timer"; } watchdog_timedout[1:1];
+		field {sw=r; swacc;hw=w;      desc="NA. CPU detected an architecture level lockup and requested  a system reset"; } sysreset_req[2:2];
+		field {sw=r; swacc;hw=w;      desc="The brownout detector triggered a reset"; } brownout[3:3];
+		field {sw=r; swacc;hw=w;      desc="The soft reset bit was written to"; } softreset[4:4];
+		field {sw=r; swacc;hw=w; hwset;desc="NA. The cpu reset bit was written to"; } cpu_warm_reset[5:5];
+	}ResetCause;
+
+	reg {
+		desc="Writing to PD fields initiates the shutdown of the corresponding power domain. A shutdown request is sent to the domain, This domain waits until all outstanding transactions are completed and then generates a corresponding ack signal. Once the ack signal is generated the power controller will turn off power to that domain.";
+		field {sw=rw;hw=r;
+			desc="Poweroff the CPU Domain";
+} cpu_pd[0:0]=0;
+		field {sw=rw;hw=r;
+			desc="Powerdown the boot ROM";
+			} cpu_rom_powerdown[1:1]=0;
+		field {
+			sw=rw; hw=r;
+			desc="Powerdown the CPU ram. this puts the ram in deepsleep mode";
+		}cpu_ram_powerdown[2:2]=0;
+		field {
+			sw=rw;hw=r;
+    desc="Not used; chiplet power domain is controlled via the mode bits";
+      } chiplet_pd[3:3]=0;
+		field {
+			sw=rw;hw=r;
+			desc="Power down for MRAM digital logic and MRAM domain. When set to 1, this powers off
+					the domain; setting to 0 powers it on.";
+      } mram_pd[4:4]=0;
+		field {
+   sw=rw;hw=r; desc="Power off the chip. Only wakeup logic is powered on";} system_poweroff[5:5]=0;
+   field {
+	   sw=rw;hw=r;
+	   desc="Not used; hyperbus power domain is controlled via the mode bits.";
+   } xspi_pd[6:6]=0;
+field {
+	sw=rw; hw=r;
+	desc="Minion PowerDown Req";
+} minion_pd[15:8]=0x0;
+
+
+		field {
+			sw=rw;hw=r;
+			desc="Connects directly to the MRAM's main power switch, bypassing the digital domain's
+					power switch. When set to 1, the MRAM is in deep sleep; setting to 0 powers the
+					MRAM on.";
+		} mram_dsleep_en[16:16] = 0;
+		field {
+			sw=rw;hw=r;
+			desc="currently not used. In future this will be used for CPU sleep management.";
+      } cpu_sleep_en[17:17] = 0;
+	}PowerDomainReq;
+
+	reg {
+		desc="This mirrors the Ack signal generated in response to power down request.";
+
+		field {sw=r ; hw=w ; desc="pd ack for cpu"                 ; } cpu_pd_ack[0:0]=0       ; 
+		field {sw=r ; hw=w ; desc="Not used: pd ack for TCM"       ; } sram_pd_ack[1:1]=0      ; 
+		field {sw=r ; hw=w ; desc="Not used: pd ack for chiplet"   ; } chiplet_pd_ack[3:3]=0   ; 
+		field {sw=r ; hw=w ; desc="pd ack for mram"                ; } mram_pd_ack[4:4]=0      ; 
+		field {sw=r ; hw=w ; desc="pd ack for system"              ; } system_pd_ack[5:5]=0    ; 
+		field {sw=r ; hw=w ; desc="Not used: pd ack for hy perbus" ; } hyperbus_pd_ack[6:6]=0  ; 
+		field {sw=r ; hw=w ; desc="Minion PowerDown Req"           ; } minion_pd_ack[15:8]=0x0 ; 
+	}PowerDomainAck;
+
+	reg {
+		desc="When a power domain is switched on, it takes time for the voltage to stabalize, this time is process dependent. The default value is sufficiently large to account for all variations.";
+		field {sw=rw;swmod;hw=rw; desc="Counter for powerGood"; } counter[20:0]=0xfffff;
+	} PowerGood;
+reg {
+desc="Status";
+field {sw=r; hw=na; desc="Asserted when MRAM is powered on/reset until internal setup is done.";} reserved[3:0]=0x0;
+}PowerStatus;
+
+	reg {
+		desc=" initially locked=0, A read on this register will set the lock bit.
+			**Usage:**
+			1. Read this field. If you get a value of zero you got the lock. Else a different processing element acquired the lock. Poll at fixed intervals(dont spam) until you get the lock.
+			2. If you acquired the lock, Once you have finished interacting with the locked resource write 0 to this register to release the lock.";
+		field {rset;sw=rw;hw=na;} lock[0:0]=0;
+	}SpinLock;
+
+
+	reg {
+		field {sw=r  ; hw=w ; desc="The mode in which chip is working, hyperbus, axi,ahb,gci"             ; } chip_mode[1:0]      ; 
+		field {sw=r  ; hw=w ; desc="If chip is axi/ahb mode datawidth"                                    ; } ifc_width[2:2]      ; 
+		field {sw=rw ; hw=r ; desc="Jump to 00:no Jump, 01:TCM,10:MRAM"                                   ; }bootload[4:3]=0      ; 
+		field {sw=rw ; hw=r ; desc="Jump to 00:no load, 01:Load TCM via Chiplet,10:Load MRAM via Chiplet" ; }load_external[6:5]=0 ; 
+	} ChipMode ;
+
+	reg {
+		field {sw=rw;hw=r;desc="Mailbox0"; } mbox0[31:0]=0;
+	} Mailbox0 ;
+
+	reg {
+		field {sw=rw;hw=r;desc="Mailbox1"; } mbox1[31:0]=0;
+	} Mailbox1 ;
+
+	reg {
+		desc="Gpio Output enable.
+			Write 1 to this bit to set the GPIO register in output mode.";
+		field {sw=rw; hw=r; desc="Gpio output enable";} gpio_oe[10:0]=0x0;
+	} GPIO_OE;
+
+	reg {
+		desc="Gpio Input
+			For each bit in input mode this register captures the input value.";
+		field {sw=r; hw=w; desc="Gpio input";} gpio_i[10:0]=0x0;
+	} GPIO_I ;
+	reg {
+		desc="Gpio Output
+			For each bit in output mode the content of the corresponding bit in this register is reflected on the GPIO Pin";
+		field {sw=rw; hw=r; desc="Gpio input";} gpio_o[10:0]=0x0;
+	} GPIO_O;
+	reg {
+		desc="Gpio Interrupt Enable
+			For each bit in input mode if the input signal toggles and the content of the corresponding bit in this register is 1, then a GPIO interrupt is raised.";
+		field {sw=rw; hw=r; desc="Gpio input";} gpio_interrupt_en[10:0]=0x0;
+	} GPIO_Interrupt_Enable;
+
+ring_osc_ctrl ring_osc;
+clock_divider cpu_divider;
+clock_divider system_divider;
+clock_divider periph_divider;
+tsense_ctrl tsense_ctrl;
+tsense_status  tsense_status;
+
+};

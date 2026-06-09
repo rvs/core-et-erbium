@@ -1,0 +1,1 @@
+../ip/xspi/doc/xspi.md
