@@ -47,6 +47,7 @@
 !*.mk
 !*.toml
 !LICENSE
+!NOTICE
 
 bluespec.json
 
